@@ -15,5 +15,5 @@ Credit to [coolaj86][2] for the shuffle function.
 {{'a string to jumble up' | pmkr.shuffle}}
 ```
 
-  [1]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/services/filterStabilize
+  [1]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/services/filterStabilize
   [2]: https:github.com/coolaj86/knuth-shuffle

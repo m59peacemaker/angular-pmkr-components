@@ -29,4 +29,4 @@ This filter depends on the [filterStabilize][1] service to prevent infinite dige
 </div>
 ```
 
-  [1]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/services/filterStabilize
+  [1]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/services/filterStabilize

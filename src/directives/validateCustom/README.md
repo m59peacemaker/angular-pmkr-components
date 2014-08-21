@@ -75,4 +75,4 @@ Name of the `$scope` property to which the directive will assign useful properti
 - `invalid` - `true` when the field is invalid AND `pending` is `false`.
 - `checkedValue` - the value that was validated
 
-  [1]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/services/debounce
+  [1]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/services/debounce
