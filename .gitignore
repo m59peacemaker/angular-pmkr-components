@@ -1,0 +1,6 @@
+node_modules
+bower_components
+vendor
+temp
+tmp
+*.log

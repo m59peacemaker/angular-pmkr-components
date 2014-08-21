@@ -1,0 +1,28 @@
+{
+  "name": "angular-pmkr-components",
+  "author": {
+    "name": "Johnny Hauser",
+    "email": "johnnyhauser@gmail.com",
+    "url": "https://github.com/m59peacemaker"
+  },
+  "keywords": [
+    "news"
+  ],
+  "private": "true",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m59peacemaker/angular-pmkr-components"
+  },
+  "version": "0.0.0",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.7.0",
+    "gulp-clean": "^0.3.0",
+    "gulp-concat": "^2.2.0",
+    "gulp-header": "^1.0.2",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^0.3.0",
+    "gulp-util": "^2.2.16"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "angular-pmkr-components",
+  "author": {
+    "name": "Johnny Hauser",
+    "email": "johnnyhauser@gmail.com",
+    "url": "https://github.com/m59peacemaker"
+  },
+  "keywords": [
+    "Angular",
+    "Components",
+    "Filters",
+    "Services",
+    "Directives"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m59peacemaker/angular-pmkr-components"
+  },
+  "version": "0.0.0",
+  "license": "MIT",
+  "ignore": [
+    ".*",
+    "gulpfile.js"
+  ],
+  "dependencies": {
+    "angular": "1.3.0-beta.18"
+  }
+}
