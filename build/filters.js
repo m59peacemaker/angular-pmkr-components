@@ -32,6 +32,37 @@ angular.module('pmkr.offset', [])
 
 ;
 
+angular.module('pmkr.partition', [
+  'pmkr.filterStabilize'
+])
+
+.filter('pmkr.partition', [
+  'pmkr.filterStabilize',
+  function(stabilize) {
+
+    var filter = stabilize(function(input, size) {
+
+      if (!input || !size) {
+        return input;
+      }
+
+      var newArr = [];
+
+      for (var i = 0; i < input.length; i+= size) {
+        newArr.push(input.slice(i, i+size));
+      }
+
+      return newArr;
+
+    });
+
+    return filter;
+
+  }
+])
+
+;
+
 angular.module('pmkr.shuffle', [
   'pmkr.filterStabilize'
 ])
@@ -70,37 +101,6 @@ angular.module('pmkr.shuffle', [
       return arr;
 
     }
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.partition', [
-  'pmkr.filterStabilize'
-])
-
-.filter('pmkr.partition', [
-  'pmkr.filterStabilize',
-  function(stabilize) {
-
-    var filter = stabilize(function(input, size) {
-
-      if (!input || !size) {
-        return input;
-      }
-
-      var newArr = [];
-
-      for (var i = 0; i < input.length; i+= size) {
-        newArr.push(input.slice(i, i+size));
-      }
-
-      return newArr;
-
-    });
 
     return filter;
 

@@ -1,4 +1,4 @@
-angular.module('pmkr.memoize')
+angular.module('pmkr.memoize', [])
 
 .factory('pmkr.memoize', [
   function() {
