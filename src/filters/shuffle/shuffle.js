@@ -8,6 +8,8 @@ angular.module('pmkr.shuffle', [
 
     var filter = stabilize(function(input) {
 
+      if (!input) { return input; }
+
       if (typeof input === 'string') {
         input = input.split('');
         shuffle(input);
