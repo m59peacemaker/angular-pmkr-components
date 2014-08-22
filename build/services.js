@@ -8,6 +8,7 @@ File created: 8.22.2014
 
 angular.module('pmkr.components.services', [
   'pmkr.debounce',
+  'pmkr.memoize',
   'pmkr.filterStabilize'
 ]);
 
