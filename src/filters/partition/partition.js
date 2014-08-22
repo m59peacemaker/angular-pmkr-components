@@ -6,12 +6,16 @@ angular.module('pmkr.partition', [
   'pmkr.filterStabilize',
   function(stabilize) {
 
-    var filter = stabilize('pmkr.partition', function(arr, size) {
+    var filter = stabilize(function(input, size) {
+
+      if (!input || !size) {
+        return input;
+      }
 
       var newArr = [];
 
-      for (var i=0; i<arr.length; i+=size) {
-        newArr.push(arr.slice(i, i+size));
+      for (var i = 0; i < input.length; i+= size) {
+        newArr.push(input.slice(i, i+size));
       }
 
       return newArr;

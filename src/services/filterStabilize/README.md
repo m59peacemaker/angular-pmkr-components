@@ -1,5 +1,11 @@
 # Filter Stabilize
 
+Fixes filters that cause infinite digest cycles and passes a copy of the input so that it can be directly modified.
+
+## Dependencies
+
+- [memoize][1] - Memoization prevents most infinite digest cycles.
+
 ## The problem:
 
 A filter used in the view triggers another digest cycle. If the filtered value isn't stable (returns differently each time), an infinite digest loop will occur.
@@ -8,7 +14,7 @@ A filter used in the view triggers another digest cycle. If the filtered value i
 
 The standard solution is to filter the data within the controller, thus avoiding the issue altogether. However, many people still find it nicer to be able to use unstable filters in the view.
 
-The `filterStabilize` service stabilizes unstable filters by simply caching the filter result by the filter name and filter arguments and then returning the same previously filter result each time.
+The `filterStabilize` service stabilizes unstable filters by passing a copy of the arguments to the filter function and by memozing the filter function. This prevents the original input from being modified and ensures that the filter outputs the same result given the same arguments.
 
 ### Unstable filter:
 
@@ -60,3 +66,13 @@ $scope.refilter = function() {
   $scope.arbitraryArg = Math.random();
 };
 ```
+
+### Parameters
+
+#### filterFn
+
+Type: `Function`
+
+A function that transforms input.
+
+  [1]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/services/memoize

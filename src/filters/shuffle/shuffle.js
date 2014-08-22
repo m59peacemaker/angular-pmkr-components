@@ -6,7 +6,7 @@ angular.module('pmkr.shuffle', [
   'pmkr.filterStabilize',
   function(stabilize) {
 
-    var filter = stabilize('pmkr.shuffle', function(input) {
+    var filter = stabilize(function(input) {
 
       if (typeof input === 'string') {
         input = input.split('');

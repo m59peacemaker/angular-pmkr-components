@@ -1,8 +1,12 @@
 # Partition
 
+Accept an array or string and breaks them into arrays of the given size.
+
 The `partition` filter is especially useful for generating rows and columns for a grid system as in Twitter Bootstrap.
 
-This filter depends on the [filterStabilize][1] service to prevent infinite digest cycles.
+## Dependencies
+
+- [filterStabilize][1] - Prevents infinite digest cycles.
 
 ## Usage:
 
@@ -28,5 +32,13 @@ This filter depends on the [filterStabilize][1] service to prevent infinite dige
   <div>5</div>
 </div>
 ```
+
+### Parameters
+
+#### size
+
+Type: `Number`
+
+The partition size.
 
   [1]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/services/filterStabilize
