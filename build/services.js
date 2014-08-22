@@ -3,7 +3,7 @@ pmkr.components v0.0.0
 https://github.com/m59peacemaker/angular-pmkr-components
 License: MIT
 Author: Johnny Hauser
-File created: 8.21.2014
+File created: 8.22.2014
 */
 
 angular.module('pmkr.components.services', [
@@ -117,55 +117,71 @@ angular.module('pmkr.debounce', [])
 
 ;
 
-angular.module('pmkr.filterStabilize', [])
+angular.module('pmkr.filterStabilize', [
+  'pmkr.memoize'
+])
 
 .factory('pmkr.filterStabilize', [
+  'pmkr.memoize',
+  function(memoize) {
+
+    function service(fn) {
+
+      function filter() {
+        var args = [].slice.call(arguments);
+        // always pass a copy of the args so that the original input can't be modified
+        args = angular.copy(args);
+        // return the `fn` return value or input reference (makes `fn` return optional)
+        var filtered = fn.apply(this, args) || args[0];
+        return filtered;
+      }
+
+      var memoized = memoize(filter);
+
+      return memoized;
+
+    }
+
+    return service;
+
+  }
+])
+
+;
+
+angular.module('pmkr.memoize')
+
+.factory('pmkr.memoize', [
   function() {
 
-    var cache = {};
+    function service() {
+      return memoizeFactory.apply(this, arguments);
+    }
 
-    var service = function(filterName, filterFn) {
+    function memoizeFactory(fn) {
 
-      // create a stabilized filter that calls the passed in filterFn
-      var filter = function() {
+      var cache = {};
 
-        // copy arguments to new array as to not modify arguments object
-        var args = [];
-        for (var i=0; i<arguments.length; ++i) {
-          args.push(arguments[i]);
-        }
+      function memoized() {
 
-        var input = args[0];
-
-        if (!input) { return input; }
-
-        cache[filterName] = cache[filterName] || {};
+        var args = [].slice.call(arguments);
 
         var key = JSON.stringify(args);
-        var fromCache = cache[filterName][key];
+
+        var fromCache = cache[key];
         if (fromCache) {
           return fromCache;
         }
 
-        // replace input with copy - never modify input
-        args[0] = angular.copy(input);
+        cache[key] = fn.apply(this, arguments);
 
-        // filtered = filterFn's return value, or the input copy if no return value
-        // filterFn can return new data or modify the original (returning original is optional)
-        var filtered = filterFn.apply(this, args) || args[0];
+        return cache[key];
 
-        // cache result according to all arguments - allows unique identifier to be passed in
-        cache[filterName][key] = filtered;
+      }
 
-        // return the new or copied filtered input
-        return filtered;
+      return memoized;
 
-      };
-
-      // return the stabilized filter
-      return filter;
-
-    }; // end service function
+    } // end service function
 
     return service;
 
