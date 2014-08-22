@@ -18,7 +18,7 @@ angular.module('pmkr.validateCustom', [
         var props = {};
         opts.props && ($scope[opts.props] = props);
 
-        var valid;
+        var valid = true; // field is initially valid
         var gate = false;
 
         $ngModel.$validators[opts.name] = function() {

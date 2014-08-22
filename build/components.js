@@ -88,7 +88,7 @@ angular.module('pmkr.validateCustom', [
         var props = {};
         opts.props && ($scope[opts.props] = props);
 
-        var valid;
+        var valid = true; // field is initially valid
         var gate = false;
 
         $ngModel.$validators[opts.name] = function() {
@@ -159,6 +159,37 @@ angular.module('pmkr.offset', [])
 
 ;
 
+angular.module('pmkr.partition', [
+  'pmkr.filterStabilize'
+])
+
+.filter('pmkr.partition', [
+  'pmkr.filterStabilize',
+  function(stabilize) {
+
+    var filter = stabilize(function(input, size) {
+
+      if (!input || !size) {
+        return input;
+      }
+
+      var newArr = [];
+
+      for (var i = 0; i < input.length; i+= size) {
+        newArr.push(input.slice(i, i+size));
+      }
+
+      return newArr;
+
+    });
+
+    return filter;
+
+  }
+])
+
+;
+
 angular.module('pmkr.shuffle', [
   'pmkr.filterStabilize'
 ])
@@ -207,37 +238,6 @@ angular.module('pmkr.shuffle', [
 
 ;
 
-angular.module('pmkr.partition', [
-  'pmkr.filterStabilize'
-])
-
-.filter('pmkr.partition', [
-  'pmkr.filterStabilize',
-  function(stabilize) {
-
-    var filter = stabilize(function(input, size) {
-
-      if (!input || !size) {
-        return input;
-      }
-
-      var newArr = [];
-
-      for (var i = 0; i < input.length; i+= size) {
-        newArr.push(input.slice(i, i+size));
-      }
-
-      return newArr;
-
-    });
-
-    return filter;
-
-  }
-])
-
-;
-
 angular.module('pmkr.slugify', [])
 
 .filter('pmkr.slugify', [
@@ -277,6 +277,38 @@ angular.module('pmkr.textOnly', [])
   return filter;
 
 })
+
+;
+
+angular.module('pmkr.filterStabilize', [
+  'pmkr.memoize'
+])
+
+.factory('pmkr.filterStabilize', [
+  'pmkr.memoize',
+  function(memoize) {
+
+    function service(fn) {
+
+      function filter() {
+        var args = [].slice.call(arguments);
+        // always pass a copy of the args so that the original input can't be modified
+        args = angular.copy(args);
+        // return the `fn` return value or input reference (makes `fn` return optional)
+        var filtered = fn.apply(this, args) || args[0];
+        return filtered;
+      }
+
+      var memoized = memoize(filter);
+
+      return memoized;
+
+    }
+
+    return service;
+
+  }
+])
 
 ;
 
@@ -376,38 +408,6 @@ angular.module('pmkr.debounce', [])
       }
 
       return debounced;
-
-    }
-
-    return service;
-
-  }
-])
-
-;
-
-angular.module('pmkr.filterStabilize', [
-  'pmkr.memoize'
-])
-
-.factory('pmkr.filterStabilize', [
-  'pmkr.memoize',
-  function(memoize) {
-
-    function service(fn) {
-
-      function filter() {
-        var args = [].slice.call(arguments);
-        // always pass a copy of the args so that the original input can't be modified
-        args = angular.copy(args);
-        // return the `fn` return value or input reference (makes `fn` return optional)
-        var filtered = fn.apply(this, args) || args[0];
-        return filtered;
-      }
-
-      var memoized = memoize(filter);
-
-      return memoized;
 
     }
 
