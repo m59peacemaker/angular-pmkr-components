@@ -5,6 +5,7 @@ var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 var header = require('gulp-header');
 var uglify = require('gulp-uglify');
+var sourcemaps = require('gulp-sourcemaps');
 
 var pkg = require('./package.json');
 
@@ -25,15 +26,20 @@ var banner = (function() {
   return obj;
 }());
 
-gulp.task('default', ['build']);
+gulp.task('default', [
+  'build'
+]);
 
 gulp.task('build', [
+  'filters',
+  'services',
+  'directives',
   'components',
   'banner'
 ]);
 
 gulp.task('clean-build', function() {
-  return gulp.src('build/**')
+  return gulp.src('build/**/*')
     .pipe(clean())
 });
 
@@ -48,41 +54,89 @@ gulp.task('banner', [
     .pipe(gulp.dest('build'))
 });
 
-gulp.task('services', function() {
-  return gulp.src('src/services/**/*.js')
-    .pipe(concat('services.js'))
-    .pipe(uglify())
-    .pipe(rename('services.min.js'))
-    .pipe(gulp.dest('build'))
-  ;
-});
+gulp.task('filters', [
+  'filters-full',
+  'filters-min'
+]);
 
-gulp.task('filters', function() {
-  return gulp.src('src/filters/**/*.js')
-    .pipe(concat('filters.js'))
-    .pipe(uglify())
-    .pipe(rename('filters.min.js'))
-    .pipe(gulp.dest('build'))
-  ;
-});
+gulp.task('services', [
+  'services-full',
+  'services-min'
+]);
 
-gulp.task('directives', function() {
-  return gulp.src('src/directives/**/*.js')
-    .pipe(concat('directives.js'))
-    .pipe(uglify())
-    .pipe(rename('directives.min.js'))
-    .pipe(gulp.dest('build'))
-  ;
-});
+gulp.task('directives', [
+  'directives-full',
+  'directives-min'
+]);
 
 gulp.task('components', [
-  'filters',
-  'services',
-  'directives'
-], function() {
-  return gulp.src(['src/components.js', 'build/**/*.min.js'])
-    .pipe(concat('components.js'))
-    .pipe(uglify())
-    .pipe(rename('components.min.js'))
+  'components-full',
+  'components-min'
+]);
+
+gulp.task('filters-full', function() {
+  return gulp.src('src/filters/**/*.js')
+    .pipe(concat('filters.js', {newLine: '\r\n\r\n'}))
+    .pipe(gulp.dest('build'))
+  ;
+});
+
+gulp.task('filters-min', function() {
+  return gulp.src('src/filters/**/*.js')
+    .pipe(sourcemaps.init())
+      .pipe(concat('filters.min.js'))
+      .pipe(uglify())
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('build'))
+  ;
+});
+
+gulp.task('services-full', function() {
+  return gulp.src('src/services/**/*.js')
+    .pipe(concat('services.js', {newLine: '\r\n\r\n'}))
+    .pipe(gulp.dest('build'))
+  ;
+});
+
+gulp.task('services-min', function() {
+  return gulp.src('src/services/**/*.js')
+    .pipe(sourcemaps.init())
+      .pipe(concat('services.min.js'))
+      .pipe(uglify())
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('build'))
+  ;
+});
+
+gulp.task('directives-full', function() {
+  return gulp.src('src/directives/**/*.js')
+    .pipe(concat('directives.js', {newLine: '\r\n\r\n'}))
+    .pipe(gulp.dest('build'))
+  ;
+});
+
+gulp.task('directives-min', function() {
+  return gulp.src('src/directives/**/*.js')
+    .pipe(sourcemaps.init())
+      .pipe(concat('directives.min.js'))
+      .pipe(uglify())
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('build'))
+  ;
+});
+
+gulp.task('components-full', function() {
+  return gulp.src('src/**/*.js')
+    .pipe(concat('components.js', {newLine: '\r\n\r\n'}))
+    .pipe(gulp.dest('build'))
+  ;
+});
+
+gulp.task('components-min', function() {
+  return gulp.src('src/**/*.js')
+    .pipe(sourcemaps.init())
+      .pipe(concat('components.min.js'))
+      .pipe(uglify())
+    .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('build'))
 });
