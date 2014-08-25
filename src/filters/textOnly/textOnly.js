@@ -4,6 +4,8 @@ angular.module('pmkr.textOnly', [])
 
   var filter = function (str)  {
 
+    if (!str) { return str; }
+
     var div = document.createElement('div');
     div.innerHTML = str;
     var text = div.textContent;
