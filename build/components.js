@@ -141,6 +141,43 @@ angular.module('pmkr.validateCustom', [
 
 ;
 
+angular.module('pmkr.limitEllipsis', [
+  'pmkr.textOnly'
+])
+
+.filter('pmkr.limitEllipsis', [
+  '$filter',
+  function($filter) {
+
+    var textOnly = $filter('pmkr.textOnly');
+
+    var limitTo = $filter('limitTo');
+
+    function filter(str, limit, ellipsis) {
+
+      if (!str || !str.length) { return str; }
+
+      ellipsis = ellipsis || '...';
+
+      var text = textOnly(str);
+
+      var limited = limitTo(str, limit);
+
+      if (limited === str) {
+        return limited;
+      }
+
+      return limited+ellipsis;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
 angular.module('pmkr.offset', [])
 
 .filter('pmkr.offset', [
@@ -154,37 +191,6 @@ angular.module('pmkr.offset', [])
       return input.slice(offset);
 
     };
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.partition', [
-  'pmkr.filterStabilize'
-])
-
-.filter('pmkr.partition', [
-  'pmkr.filterStabilize',
-  function(stabilize) {
-
-    var filter = stabilize(function(input, size) {
-
-      if (!input || !size) {
-        return input;
-      }
-
-      var newArr = [];
-
-      for (var i = 0; i < input.length; i+= size) {
-        newArr.push(input.slice(i, i+size));
-      }
-
-      return newArr;
-
-    });
 
     return filter;
 
@@ -233,6 +239,37 @@ angular.module('pmkr.shuffle', [
       return arr;
 
     }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.partition', [
+  'pmkr.filterStabilize'
+])
+
+.filter('pmkr.partition', [
+  'pmkr.filterStabilize',
+  function(stabilize) {
+
+    var filter = stabilize(function(input, size) {
+
+      if (!input || !size) {
+        return input;
+      }
+
+      var newArr = [];
+
+      for (var i = 0; i < input.length; i+= size) {
+        newArr.push(input.slice(i, i+size));
+      }
+
+      return newArr;
+
+    });
 
     return filter;
 
