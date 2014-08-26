@@ -3,7 +3,7 @@ pmkr.components v0.0.0
 https://github.com/m59peacemaker/angular-pmkr-components
 License: MIT
 Author: Johnny Hauser
-File created: 8.22.2014
+File created: 8.25.2014
 */
 
 angular.module('pmkr.components.filters', [
@@ -20,9 +20,12 @@ angular.module('pmkr.offset', [])
   function() {
 
     var filter = function(input, offset) {
+
       if (!input || !input.length) { return input; }
+
       offset = parseInt(offset, 10);
       return input.slice(offset);
+
     };
 
     return filter;
@@ -117,12 +120,17 @@ angular.module('pmkr.slugify', [])
   function() {
 
     var filter = function(str) {
+
+      if (!str) { return str; }
+
       var slug = str
         .toLowerCase()
         .replace(/ /g, '-')
         .replace(/[^\w-]+/g, '')
       ;
+
       return slug;
+
     };
 
     return filter;
@@ -137,6 +145,8 @@ angular.module('pmkr.textOnly', [])
 .filter('pmkr.textOnly', function () {
 
   var filter = function (str)  {
+
+    if (!str) { return str; }
 
     var div = document.createElement('div');
     div.innerHTML = str;

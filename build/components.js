@@ -3,7 +3,7 @@ pmkr.components v0.0.0
 https://github.com/m59peacemaker/angular-pmkr-components
 License: MIT
 Author: Johnny Hauser
-File created: 8.22.2014
+File created: 8.25.2014
 */
 
 angular.module('pmkr.components', [
@@ -147,9 +147,12 @@ angular.module('pmkr.offset', [])
   function() {
 
     var filter = function(input, offset) {
+
       if (!input || !input.length) { return input; }
+
       offset = parseInt(offset, 10);
       return input.slice(offset);
+
     };
 
     return filter;
@@ -244,12 +247,17 @@ angular.module('pmkr.slugify', [])
   function() {
 
     var filter = function(str) {
+
+      if (!str) { return str; }
+
       var slug = str
         .toLowerCase()
         .replace(/ /g, '-')
         .replace(/[^\w-]+/g, '')
       ;
+
       return slug;
+
     };
 
     return filter;
@@ -265,6 +273,8 @@ angular.module('pmkr.textOnly', [])
 
   var filter = function (str)  {
 
+    if (!str) { return str; }
+
     var div = document.createElement('div');
     div.innerHTML = str;
     var text = div.textContent;
@@ -277,38 +287,6 @@ angular.module('pmkr.textOnly', [])
   return filter;
 
 })
-
-;
-
-angular.module('pmkr.filterStabilize', [
-  'pmkr.memoize'
-])
-
-.factory('pmkr.filterStabilize', [
-  'pmkr.memoize',
-  function(memoize) {
-
-    function service(fn) {
-
-      function filter() {
-        var args = [].slice.call(arguments);
-        // always pass a copy of the args so that the original input can't be modified
-        args = angular.copy(args);
-        // return the `fn` return value or input reference (makes `fn` return optional)
-        var filtered = fn.apply(this, args) || args[0];
-        return filtered;
-      }
-
-      var memoized = memoize(filter);
-
-      return memoized;
-
-    }
-
-    return service;
-
-  }
-])
 
 ;
 
@@ -408,6 +386,38 @@ angular.module('pmkr.debounce', [])
       }
 
       return debounced;
+
+    }
+
+    return service;
+
+  }
+])
+
+;
+
+angular.module('pmkr.filterStabilize', [
+  'pmkr.memoize'
+])
+
+.factory('pmkr.filterStabilize', [
+  'pmkr.memoize',
+  function(memoize) {
+
+    function service(fn) {
+
+      function filter() {
+        var args = [].slice.call(arguments);
+        // always pass a copy of the args so that the original input can't be modified
+        args = angular.copy(args);
+        // return the `fn` return value or input reference (makes `fn` return optional)
+        var filtered = fn.apply(this, args) || args[0];
+        return filtered;
+      }
+
+      var memoized = memoize(filter);
+
+      return memoized;
 
     }
 
