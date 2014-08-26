@@ -39,7 +39,7 @@ gulp.task('build', [
 ]);
 
 gulp.task('clean-build', function() {
-  return gulp.src('**/*', {cwd:'build'})
+  return gulp.src('*', {cwd:'build'})
     .pipe(clean())
 });
 

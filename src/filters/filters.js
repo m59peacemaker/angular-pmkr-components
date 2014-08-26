@@ -3,5 +3,6 @@ angular.module('pmkr.components.filters', [
   'pmkr.partition',
   'pmkr.shuffle',
   'pmkr.slugify',
-  'pmkr.textOnly'
+  'pmkr.textOnly',
+  'pmkr.limitEllipsis'
 ]);
