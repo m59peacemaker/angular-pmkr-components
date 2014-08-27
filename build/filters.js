@@ -35,9 +35,9 @@ angular.module('pmkr.limitEllipsis', [
 
       var text = textOnly(str);
 
-      var limited = limitTo(str, limit);
+      var limited = limitTo(text, limit);
 
-      if (limited === str) {
+      if (limited === text) {
         return limited;
       }
 
@@ -65,37 +65,6 @@ angular.module('pmkr.offset', [])
       return input.slice(offset);
 
     };
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.partition', [
-  'pmkr.filterStabilize'
-])
-
-.filter('pmkr.partition', [
-  'pmkr.filterStabilize',
-  function(stabilize) {
-
-    var filter = stabilize(function(input, size) {
-
-      if (!input || !size) {
-        return input;
-      }
-
-      var newArr = [];
-
-      for (var i = 0; i < input.length; i+= size) {
-        newArr.push(input.slice(i, i+size));
-      }
-
-      return newArr;
-
-    });
 
     return filter;
 
@@ -144,6 +113,37 @@ angular.module('pmkr.shuffle', [
       return arr;
 
     }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.partition', [
+  'pmkr.filterStabilize'
+])
+
+.filter('pmkr.partition', [
+  'pmkr.filterStabilize',
+  function(stabilize) {
+
+    var filter = stabilize(function(input, size) {
+
+      if (!input || !size) {
+        return input;
+      }
+
+      var newArr = [];
+
+      for (var i = 0; i < input.length; i+= size) {
+        newArr.push(input.slice(i, i+size));
+      }
+
+      return newArr;
+
+    });
 
     return filter;
 

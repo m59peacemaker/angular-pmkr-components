@@ -163,9 +163,9 @@ angular.module('pmkr.limitEllipsis', [
 
       var text = textOnly(str);
 
-      var limited = limitTo(str, limit);
+      var limited = limitTo(text, limit);
 
-      if (limited === str) {
+      if (limited === text) {
         return limited;
       }
 
@@ -232,6 +232,32 @@ angular.module('pmkr.partition', [
 
 ;
 
+angular.module('pmkr.slugify', [])
+
+.filter('pmkr.slugify', [
+  function() {
+
+    var filter = function(str) {
+
+      if (!str) { return str; }
+
+      var slug = str
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^\w-]+/g, '')
+      ;
+
+      return slug;
+
+    };
+
+    return filter;
+
+  }
+])
+
+;
+
 angular.module('pmkr.shuffle', [
   'pmkr.filterStabilize'
 ])
@@ -272,32 +298,6 @@ angular.module('pmkr.shuffle', [
       return arr;
 
     }
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.slugify', [])
-
-.filter('pmkr.slugify', [
-  function() {
-
-    var filter = function(str) {
-
-      if (!str) { return str; }
-
-      var slug = str
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-      ;
-
-      return slug;
-
-    };
 
     return filter;
 

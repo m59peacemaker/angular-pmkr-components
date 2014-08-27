@@ -18,9 +18,9 @@ angular.module('pmkr.limitEllipsis', [
 
       var text = textOnly(str);
 
-      var limited = limitTo(str, limit);
+      var limited = limitTo(text, limit);
 
-      if (limited === str) {
+      if (limited === text) {
         return limited;
       }
 
