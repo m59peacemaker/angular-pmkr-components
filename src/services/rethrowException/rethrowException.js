@@ -1,4 +1,4 @@
-angular.module('pmkr.rethrowException')
+angular.module('pmkr.rethrowException', [])
 
 .provider('pmkr.rethrowException', [
   '$provide',
