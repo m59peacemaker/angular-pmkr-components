@@ -3,14 +3,47 @@ pmkr.components v0.0.0
 https://github.com/m59peacemaker/angular-pmkr-components
 License: MIT
 Author: Johnny Hauser
-File created: 8.25.2014
+File created: 8.26.2014
 */
 
 angular.module('pmkr.components.services', [
   'pmkr.debounce',
   'pmkr.memoize',
-  'pmkr.filterStabilize'
+  'pmkr.filterStabilize',
+  'pmkr.rethrowException'
 ]);
+
+angular.module('pmkr.filterStabilize', [
+  'pmkr.memoize'
+])
+
+.factory('pmkr.filterStabilize', [
+  'pmkr.memoize',
+  function(memoize) {
+
+    function service(fn) {
+
+      function filter() {
+        var args = [].slice.call(arguments);
+        // always pass a copy of the args so that the original input can't be modified
+        args = angular.copy(args);
+        // return the `fn` return value or input reference (makes `fn` return optional)
+        var filtered = fn.apply(this, args) || args[0];
+        return filtered;
+      }
+
+      var memoized = memoize(filter);
+
+      return memoized;
+
+    }
+
+    return service;
+
+  }
+])
+
+;
 
 angular.module('pmkr.debounce', [])
 
@@ -118,38 +151,6 @@ angular.module('pmkr.debounce', [])
 
 ;
 
-angular.module('pmkr.filterStabilize', [
-  'pmkr.memoize'
-])
-
-.factory('pmkr.filterStabilize', [
-  'pmkr.memoize',
-  function(memoize) {
-
-    function service(fn) {
-
-      function filter() {
-        var args = [].slice.call(arguments);
-        // always pass a copy of the args so that the original input can't be modified
-        args = angular.copy(args);
-        // return the `fn` return value or input reference (makes `fn` return optional)
-        var filtered = fn.apply(this, args) || args[0];
-        return filtered;
-      }
-
-      var memoized = memoize(filter);
-
-      return memoized;
-
-    }
-
-    return service;
-
-  }
-])
-
-;
-
 angular.module('pmkr.memoize', [])
 
 .factory('pmkr.memoize', [
@@ -185,6 +186,37 @@ angular.module('pmkr.memoize', [])
     } // end service function
 
     return service;
+
+  }
+])
+
+;
+
+angular.module('pmkr.rethrowException')
+
+.provider('pmkr.rethrowException', [
+  '$provide',
+  function($provide) {
+
+    this.init = function() {
+      $provide.decorator('$exceptionHandler', [
+        '$delegate',
+        decorator
+      ]);
+    };
+
+    function decorator($delegate) {
+
+      function decorated(exception, cause) {
+        $delegate(exception, cause);
+        throw exception;
+      }
+
+      return decorated;
+
+    }
+
+    this.$get = function() {};
 
   }
 ])

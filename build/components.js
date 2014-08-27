@@ -3,7 +3,7 @@ pmkr.components v0.0.0
 https://github.com/m59peacemaker/angular-pmkr-components
 License: MIT
 Author: Johnny Hauser
-File created: 8.25.2014
+File created: 8.26.2014
 */
 
 angular.module('pmkr.components', [
@@ -29,7 +29,8 @@ angular.module('pmkr.components.filters', [
 angular.module('pmkr.components.services', [
   'pmkr.debounce',
   'pmkr.memoize',
-  'pmkr.filterStabilize'
+  'pmkr.filterStabilize',
+  'pmkr.rethrowException'
 ]);
 
 angular.module('pmkr.pristineOriginal', [])
@@ -61,79 +62,6 @@ angular.module('pmkr.pristineOriginal', [])
 
       }
     };
-
-    return directive;
-
-  }
-])
-
-;
-
-angular.module('pmkr.validateCustom', [
-  'pmkr.debounce'
-])
-
-.directive('pmkrValidateCustom', [
-  '$q',
-  'pmkr.debounce',
-  function($q, debounce) {
-
-    var directive = {
-      restrict: 'A',
-      require: 'ngModel',
-      // set priority so that other directives can change ngModel state ($pristine, etc) before gate function
-      priority: 1,
-      link: function($scope, $element, $attrs, $ngModel) {
-
-        var opts = $scope.$eval($attrs.pmkrValidateCustom);
-        var props = {};
-        opts.props && ($scope[opts.props] = props);
-
-        var valid = true; // field is initially valid
-        var gate = false;
-
-        $ngModel.$validators[opts.name] = function() {
-          return valid;
-        };
-
-        var debouncedFn = debounce(validate, opts.wait);
-        var latestFn = debounce.latest(debouncedFn);
-
-        function validate(val) {
-          if (gate) { return; }
-          props.validating = true;
-          return opts.fn(val);
-        }
-
-        function valueChange(val) {
-
-          props.valid = props.invalid = false;
-
-          if (opts.gate && (gate = opts.gate(val, $ngModel))) {
-            props.pending = props.validating = false;
-            return;
-          }
-
-          props.pending = true;
-
-          latestFn(val).then(function(isValid) {
-            if (gate) { return; }
-            props.checkedValue = val;
-            valid = props.valid = isValid;
-            props.invalid = !valid;
-            $ngModel.$validate();
-            props.pending = props.validating = false;
-          });
-
-        }
-
-        $scope.$watch(function() {
-          return $ngModel.$viewValue;
-        }, valueChange);
-
-      } // link
-
-    }; // directive
 
     return directive;
 
@@ -434,6 +362,38 @@ angular.module('pmkr.debounce', [])
 
 ;
 
+angular.module('pmkr.filterStabilize', [
+  'pmkr.memoize'
+])
+
+.factory('pmkr.filterStabilize', [
+  'pmkr.memoize',
+  function(memoize) {
+
+    function service(fn) {
+
+      function filter() {
+        var args = [].slice.call(arguments);
+        // always pass a copy of the args so that the original input can't be modified
+        args = angular.copy(args);
+        // return the `fn` return value or input reference (makes `fn` return optional)
+        var filtered = fn.apply(this, args) || args[0];
+        return filtered;
+      }
+
+      var memoized = memoize(filter);
+
+      return memoized;
+
+    }
+
+    return service;
+
+  }
+])
+
+;
+
 angular.module('pmkr.memoize', [])
 
 .factory('pmkr.memoize', [
@@ -475,32 +435,104 @@ angular.module('pmkr.memoize', [])
 
 ;
 
-angular.module('pmkr.filterStabilize', [
-  'pmkr.memoize'
-])
+angular.module('pmkr.rethrowException')
 
-.factory('pmkr.filterStabilize', [
-  'pmkr.memoize',
-  function(memoize) {
+.provider('pmkr.rethrowException', [
+  '$provide',
+  function($provide) {
 
-    function service(fn) {
+    this.init = function() {
+      $provide.decorator('$exceptionHandler', [
+        '$delegate',
+        decorator
+      ]);
+    };
 
-      function filter() {
-        var args = [].slice.call(arguments);
-        // always pass a copy of the args so that the original input can't be modified
-        args = angular.copy(args);
-        // return the `fn` return value or input reference (makes `fn` return optional)
-        var filtered = fn.apply(this, args) || args[0];
-        return filtered;
+    function decorator($delegate) {
+
+      function decorated(exception, cause) {
+        $delegate(exception, cause);
+        throw exception;
       }
 
-      var memoized = memoize(filter);
-
-      return memoized;
+      return decorated;
 
     }
 
-    return service;
+    this.$get = function() {};
+
+  }
+])
+
+;
+
+angular.module('pmkr.validateCustom', [
+  'pmkr.debounce'
+])
+
+.directive('pmkrValidateCustom', [
+  '$q',
+  'pmkr.debounce',
+  function($q, debounce) {
+
+    var directive = {
+      restrict: 'A',
+      require: 'ngModel',
+      // set priority so that other directives can change ngModel state ($pristine, etc) before gate function
+      priority: 1,
+      link: function($scope, $element, $attrs, $ngModel) {
+
+        var opts = $scope.$eval($attrs.pmkrValidateCustom);
+        var props = {};
+        opts.props && ($scope[opts.props] = props);
+
+        var valid = true; // field is initially valid
+        var gate = false;
+
+        $ngModel.$validators[opts.name] = function() {
+          return valid;
+        };
+
+        var debouncedFn = debounce(validate, opts.wait);
+        var latestFn = debounce.latest(debouncedFn);
+
+        function validate(val) {
+          if (gate) { return; }
+          props.validating = true;
+          return opts.fn(val);
+        }
+
+        function valueChange(val) {
+
+          props.valid = props.invalid = false;
+
+          if (opts.gate && (gate = opts.gate(val, $ngModel))) {
+            props.pending = props.validating = false;
+            return;
+          }
+
+          props.pending = true;
+
+          latestFn(val).then(function(isValid) {
+            if (gate) { return; }
+            props.checkedValue = val;
+            valid = props.valid = isValid;
+            props.invalid = !valid;
+            $ngModel.$validate();
+            props.pending = props.validating = false;
+          });
+
+        }
+
+        $scope.$watch(function() {
+          return $ngModel.$viewValue;
+        }, valueChange);
+
+      } // link
+
+    }; // directive
+
+    return directive;
 
   }
 ])

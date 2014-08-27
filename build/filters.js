@@ -3,7 +3,7 @@ pmkr.components v0.0.0
 https://github.com/m59peacemaker/angular-pmkr-components
 License: MIT
 Author: Johnny Hauser
-File created: 8.25.2014
+File created: 8.26.2014
 */
 
 angular.module('pmkr.components.filters', [
@@ -52,27 +52,6 @@ angular.module('pmkr.limitEllipsis', [
 
 ;
 
-angular.module('pmkr.offset', [])
-
-.filter('pmkr.offset', [
-  function() {
-
-    var filter = function(input, offset) {
-
-      if (!input || !input.length) { return input; }
-
-      offset = parseInt(offset, 10);
-      return input.slice(offset);
-
-    };
-
-    return filter;
-
-  }
-])
-
-;
-
 angular.module('pmkr.partition', [
   'pmkr.filterStabilize'
 ])
@@ -96,6 +75,27 @@ angular.module('pmkr.partition', [
       return newArr;
 
     });
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.offset', [])
+
+.filter('pmkr.offset', [
+  function() {
+
+    var filter = function(input, offset) {
+
+      if (!input || !input.length) { return input; }
+
+      offset = parseInt(offset, 10);
+      return input.slice(offset);
+
+    };
 
     return filter;
 
