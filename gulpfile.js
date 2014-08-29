@@ -35,6 +35,7 @@ gulp.task('build', [
   'services',
   'directives',
   'components',
+  'readme',
   'banner'
 ]);
 
@@ -139,4 +140,11 @@ gulp.task('components-min', function() {
       .pipe(uglify())
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('build'))
+});
+
+gulp.task('readme', function() {
+  return gulp.src('src/**/README.md')
+    .pipe(concat('README.md', {newLine: '\r\n\r\n'}))
+    .pipe(gulp.dest('./'))
+  ;
 });
