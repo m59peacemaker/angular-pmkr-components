@@ -14,7 +14,7 @@ A filter used in the view triggers another digest cycle. If the filtered value i
 
 The standard solution is to filter the data within the controller, thus avoiding the issue altogether. However, many people still find it nicer to be able to use unstable filters in the view.
 
-The `filterStabilize` service stabilizes unstable filters by passing a copy of the arguments to the filter function and by memozing the filter function. This prevents the original input from being modified and ensures that the filter outputs the same result given the same arguments.
+The `filterStabilize` service stabilizes unstable filters by passing a copy of the arguments to the filter function and by memoizing the filter function. This prevents the original input from being modified and ensures that the filter outputs the same result given the same arguments.
 
 ### Unstable filter:
 
@@ -37,7 +37,7 @@ The `filterStabilize` service stabilizes unstable filters by passing a copy of t
   'pmkr.filterStabilize',
   function(stabilize) {
 
-    return stabilize('myFilter', function(input) {
+    return stabilize(function(input) {
       return Math.random();
     });
 
