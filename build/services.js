@@ -151,6 +151,37 @@ angular.module('pmkr.filterStabilize', [
 
 ;
 
+angular.module('pmkr.rethrowException', [])
+
+.provider('pmkr.rethrowException', [
+  '$provide',
+  function($provide) {
+
+    this.init = function() {
+      $provide.decorator('$exceptionHandler', [
+        '$delegate',
+        decorator
+      ]);
+    };
+
+    function decorator($delegate) {
+
+      function decorated(exception, cause) {
+        $delegate(exception, cause);
+        throw exception;
+      }
+
+      return decorated;
+
+    }
+
+    this.$get = function() {};
+
+  }
+])
+
+;
+
 angular.module('pmkr.memoize', [])
 
 .factory('pmkr.memoize', [
@@ -186,37 +217,6 @@ angular.module('pmkr.memoize', [])
     } // end service function
 
     return service;
-
-  }
-])
-
-;
-
-angular.module('pmkr.rethrowException', [])
-
-.provider('pmkr.rethrowException', [
-  '$provide',
-  function($provide) {
-
-    this.init = function() {
-      $provide.decorator('$exceptionHandler', [
-        '$delegate',
-        decorator
-      ]);
-    };
-
-    function decorator($delegate) {
-
-      function decorated(exception, cause) {
-        $delegate(exception, cause);
-        throw exception;
-      }
-
-      return decorated;
-
-    }
-
-    this.$get = function() {};
 
   }
 ])

@@ -17,15 +17,16 @@ angular.module('pmkr.components.filters', [
 ]);
 
 angular.module('pmkr.limitEllipsis', [
-  'pmkr.textOnly'
+  'pmkr.stripTags',
+  'pmkr.spaceSentences'
 ])
 
 .filter('pmkr.limitEllipsis', [
   '$filter',
   function($filter) {
 
-    var textOnly = $filter('pmkr.textOnly');
-
+    var stripTags = $filter('pmkr.stripTags');
+    var spaceSentences = $filter('pmkr.spaceSentences');
     var limitTo = $filter('limitTo');
 
     function filter(str, limit, ellipsis) {
@@ -34,7 +35,7 @@ angular.module('pmkr.limitEllipsis', [
 
       ellipsis = ellipsis || '...';
 
-      var text = textOnly(str);
+      var text = spaceSentences(stripTags(str));
 
       var limited = limitTo(text, limit);
 
@@ -66,6 +67,37 @@ angular.module('pmkr.offset', [])
       return input.slice(offset);
 
     };
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.partition', [
+  'pmkr.filterStabilize'
+])
+
+.filter('pmkr.partition', [
+  'pmkr.filterStabilize',
+  function(stabilize) {
+
+    var filter = stabilize(function(input, size) {
+
+      if (!input || !size) {
+        return input;
+      }
+
+      var newArr = [];
+
+      for (var i = 0; i < input.length; i+= size) {
+        newArr.push(input.slice(i, i+size));
+      }
+
+      return newArr;
+
+    });
 
     return filter;
 
@@ -122,37 +154,6 @@ angular.module('pmkr.shuffle', [
 
 ;
 
-angular.module('pmkr.partition', [
-  'pmkr.filterStabilize'
-])
-
-.filter('pmkr.partition', [
-  'pmkr.filterStabilize',
-  function(stabilize) {
-
-    var filter = stabilize(function(input, size) {
-
-      if (!input || !size) {
-        return input;
-      }
-
-      var newArr = [];
-
-      for (var i = 0; i < input.length; i+= size) {
-        newArr.push(input.slice(i, i+size));
-      }
-
-      return newArr;
-
-    });
-
-    return filter;
-
-  }
-])
-
-;
-
 angular.module('pmkr.slugify', [])
 
 .filter('pmkr.slugify', [
@@ -171,28 +172,6 @@ angular.module('pmkr.slugify', [])
       return slug;
 
     };
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.spaceSentences', [])
-
-.filter('pmkr.spaceSentences', [
-  function() {
-
-    function filter(str) {
-
-      if (!str) { return str; }
-
-      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
-
-      return spaced;
-
-    }
 
     return filter;
 
@@ -227,5 +206,27 @@ angular.module('pmkr.stripTags', [])
   return filter;
 
 })
+
+;
+
+angular.module('pmkr.spaceSentences', [])
+
+.filter('pmkr.spaceSentences', [
+  function() {
+
+    function filter(str) {
+
+      if (!str) { return str; }
+
+      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
+
+      return spaced;
+
+    }
+
+    return filter;
+
+  }
+])
 
 ;

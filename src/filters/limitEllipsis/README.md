@@ -4,7 +4,8 @@ Strips html tags from a string, limits string length to a given amount, and retu
 
 ## Dependencies
 
-- [textOnly][1] - Strips html tags
+- [Strip Tags][1]
+- [Space Sentences][1]
 
 ### Parameters
 
@@ -21,4 +22,5 @@ Default: '...'
 
 The suffix to be added to limited strings.
 
-  [1]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/textOnly
+  [1]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/stripTags
+  [2]: https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/spaceSentences
