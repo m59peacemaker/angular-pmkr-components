@@ -12,7 +12,8 @@
 - [Partition](https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/partition)
 - [Shuffle](https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/shuffle)
 - [Slugify](https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/slugify)
-- [Text Only](https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/textOnly)
+- [Strip Tags](https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/stripTags)
+- [Space Sentences](https://github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/spaceSentences)
 
 ## Services
 

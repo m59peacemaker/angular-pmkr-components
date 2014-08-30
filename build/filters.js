@@ -11,7 +11,8 @@ angular.module('pmkr.components.filters', [
   'pmkr.partition',
   'pmkr.shuffle',
   'pmkr.slugify',
-  'pmkr.textOnly',
+  'pmkr.stripTags',
+  'pmkr.spaceSentences',
   'pmkr.limitEllipsis'
 ]);
 
@@ -73,37 +74,6 @@ angular.module('pmkr.offset', [])
 
 ;
 
-angular.module('pmkr.partition', [
-  'pmkr.filterStabilize'
-])
-
-.filter('pmkr.partition', [
-  'pmkr.filterStabilize',
-  function(stabilize) {
-
-    var filter = stabilize(function(input, size) {
-
-      if (!input || !size) {
-        return input;
-      }
-
-      var newArr = [];
-
-      for (var i = 0; i < input.length; i+= size) {
-        newArr.push(input.slice(i, i+size));
-      }
-
-      return newArr;
-
-    });
-
-    return filter;
-
-  }
-])
-
-;
-
 angular.module('pmkr.shuffle', [
   'pmkr.filterStabilize'
 ])
@@ -152,6 +122,37 @@ angular.module('pmkr.shuffle', [
 
 ;
 
+angular.module('pmkr.partition', [
+  'pmkr.filterStabilize'
+])
+
+.filter('pmkr.partition', [
+  'pmkr.filterStabilize',
+  function(stabilize) {
+
+    var filter = stabilize(function(input, size) {
+
+      if (!input || !size) {
+        return input;
+      }
+
+      var newArr = [];
+
+      for (var i = 0; i < input.length; i+= size) {
+        newArr.push(input.slice(i, i+size));
+      }
+
+      return newArr;
+
+    });
+
+    return filter;
+
+  }
+])
+
+;
+
 angular.module('pmkr.slugify', [])
 
 .filter('pmkr.slugify', [
@@ -178,22 +179,50 @@ angular.module('pmkr.slugify', [])
 
 ;
 
-angular.module('pmkr.textOnly', [])
+angular.module('pmkr.spaceSentences', [])
 
-.filter('pmkr.textOnly', function () {
+.filter('pmkr.spaceSentences', [
+  function() {
 
-  var filter = function (str)  {
+    function filter(str) {
+
+      if (!str) { return str; }
+
+      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
+
+      return spaced;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.stripTags', [])
+
+.filter('pmkr.stripTags', function () {
+
+  function stripTags(str, tags, disallow)  {
 
     if (!str) { return str; }
 
-    var div = document.createElement('div');
-    div.innerHTML = str;
-    var text = div.textContent;
-    text = text.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
+    tags = tags ? tags.split(',') : '';
 
-    return text;
+    var regexp = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
 
-  };
+    var stripped = str.replace(regexp, function($0, $1) {
+      var found = ~tags.indexOf($1.toLowerCase());
+      var replace = disallow ? found : !found;
+      var replacement = !replace ? $0 : '';
+      return replacement;
+    });
+
+    return stripped;
+
+  }
 
   return filter;
 
