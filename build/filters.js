@@ -54,27 +54,6 @@ angular.module('pmkr.limitEllipsis', [
 
 ;
 
-angular.module('pmkr.offset', [])
-
-.filter('pmkr.offset', [
-  function() {
-
-    var filter = function(input, offset) {
-
-      if (!input || !input.length) { return input; }
-
-      offset = parseInt(offset, 10);
-      return input.slice(offset);
-
-    };
-
-    return filter;
-
-  }
-])
-
-;
-
 angular.module('pmkr.partition', [
   'pmkr.filterStabilize'
 ])
@@ -98,6 +77,53 @@ angular.module('pmkr.partition', [
       return newArr;
 
     });
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.offset', [])
+
+.filter('pmkr.offset', [
+  function() {
+
+    var filter = function(input, offset) {
+
+      if (!input || !input.length) { return input; }
+
+      offset = parseInt(offset, 10);
+      return input.slice(offset);
+
+    };
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.slugify', [])
+
+.filter('pmkr.slugify', [
+  function() {
+
+    var filter = function(str) {
+
+      if (!str) { return str; }
+
+      var slug = str
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^\w-]+/g, '')
+      ;
+
+      return slug;
+
+    };
 
     return filter;
 
@@ -154,24 +180,20 @@ angular.module('pmkr.shuffle', [
 
 ;
 
-angular.module('pmkr.slugify', [])
+angular.module('pmkr.spaceSentences', [])
 
-.filter('pmkr.slugify', [
+.filter('pmkr.spaceSentences', [
   function() {
 
-    var filter = function(str) {
+    function filter(str) {
 
       if (!str) { return str; }
 
-      var slug = str
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-      ;
+      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
 
-      return slug;
+      return spaced;
 
-    };
+    }
 
     return filter;
 
@@ -184,7 +206,7 @@ angular.module('pmkr.stripTags', [])
 
 .filter('pmkr.stripTags', function () {
 
-  function stripTags(str, tags, disallow)  {
+  function filter(str, tags, disallow)  {
 
     if (!str) { return str; }
 
@@ -206,27 +228,5 @@ angular.module('pmkr.stripTags', [])
   return filter;
 
 })
-
-;
-
-angular.module('pmkr.spaceSentences', [])
-
-.filter('pmkr.spaceSentences', [
-  function() {
-
-    function filter(str) {
-
-      if (!str) { return str; }
-
-      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
-
-      return spaced;
-
-    }
-
-    return filter;
-
-  }
-])
 
 ;

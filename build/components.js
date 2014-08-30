@@ -334,7 +334,7 @@ angular.module('pmkr.stripTags', [])
 
 .filter('pmkr.stripTags', function () {
 
-  function stripTags(str, tags, disallow)  {
+  function filter(str, tags, disallow)  {
 
     if (!str) { return str; }
 
