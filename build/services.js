@@ -3,7 +3,7 @@ pmkr.components v0.0.0
 https://github.com/m59peacemaker/angular-pmkr-components
 License: MIT
 Author: Johnny Hauser
-File created: 8.29.2014
+File created: 9.1.2014
 */
 
 angular.module('pmkr.components.services', [
@@ -12,6 +12,38 @@ angular.module('pmkr.components.services', [
   'pmkr.filterStabilize',
   'pmkr.rethrowException'
 ]);
+
+angular.module('pmkr.filterStabilize', [
+  'pmkr.memoize'
+])
+
+.factory('pmkr.filterStabilize', [
+  'pmkr.memoize',
+  function(memoize) {
+
+    function service(fn) {
+
+      function filter() {
+        var args = [].slice.call(arguments);
+        // always pass a copy of the args so that the original input can't be modified
+        args = angular.copy(args);
+        // return the `fn` return value or input reference (makes `fn` return optional)
+        var filtered = fn.apply(this, args) || args[0];
+        return filtered;
+      }
+
+      var memoized = memoize(filter);
+
+      return memoized;
+
+    }
+
+    return service;
+
+  }
+])
+
+;
 
 angular.module('pmkr.debounce', [])
 
@@ -119,32 +151,31 @@ angular.module('pmkr.debounce', [])
 
 ;
 
-angular.module('pmkr.filterStabilize', [
-  'pmkr.memoize'
-])
+angular.module('pmkr.rethrowException', [])
 
-.factory('pmkr.filterStabilize', [
-  'pmkr.memoize',
-  function(memoize) {
+.provider('pmkr.rethrowException', [
+  '$provide',
+  function($provide) {
 
-    function service(fn) {
+    this.init = function() {
+      $provide.decorator('$exceptionHandler', [
+        '$delegate',
+        decorator
+      ]);
+    };
 
-      function filter() {
-        var args = [].slice.call(arguments);
-        // always pass a copy of the args so that the original input can't be modified
-        args = angular.copy(args);
-        // return the `fn` return value or input reference (makes `fn` return optional)
-        var filtered = fn.apply(this, args) || args[0];
-        return filtered;
+    function decorator($delegate) {
+
+      function decorated(exception, cause) {
+        $delegate(exception, cause);
+        throw exception;
       }
 
-      var memoized = memoize(filter);
-
-      return memoized;
+      return decorated;
 
     }
 
-    return service;
+    this.$get = function() {};
 
   }
 ])
@@ -186,37 +217,6 @@ angular.module('pmkr.memoize', [])
     } // end service function
 
     return service;
-
-  }
-])
-
-;
-
-angular.module('pmkr.rethrowException', [])
-
-.provider('pmkr.rethrowException', [
-  '$provide',
-  function($provide) {
-
-    this.init = function() {
-      $provide.decorator('$exceptionHandler', [
-        '$delegate',
-        decorator
-      ]);
-    };
-
-    function decorator($delegate) {
-
-      function decorated(exception, cause) {
-        $delegate(exception, cause);
-        throw exception;
-      }
-
-      return decorated;
-
-    }
-
-    this.$get = function() {};
 
   }
 ])

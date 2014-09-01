@@ -3,7 +3,7 @@ pmkr.components v0.0.0
 https://github.com/m59peacemaker/angular-pmkr-components
 License: MIT
 Author: Johnny Hauser
-File created: 8.29.2014
+File created: 9.1.2014
 */
 
 angular.module('pmkr.components.filters', [
@@ -15,44 +15,6 @@ angular.module('pmkr.components.filters', [
   'pmkr.spaceSentences',
   'pmkr.limitEllipsis'
 ]);
-
-angular.module('pmkr.limitEllipsis', [
-  'pmkr.stripTags',
-  'pmkr.spaceSentences'
-])
-
-.filter('pmkr.limitEllipsis', [
-  '$filter',
-  function($filter) {
-
-    var stripTags = $filter('pmkr.stripTags');
-    var spaceSentences = $filter('pmkr.spaceSentences');
-    var limitTo = $filter('limitTo');
-
-    function filter(str, limit, ellipsis) {
-
-      if (!str || !str.length) { return str; }
-
-      ellipsis = ellipsis || '...';
-
-      var text = spaceSentences(stripTags(str));
-
-      var limited = limitTo(text, limit);
-
-      if (limited === text) {
-        return limited;
-      }
-
-      return limited+ellipsis;
-
-    }
-
-    return filter;
-
-  }
-])
-
-;
 
 angular.module('pmkr.partition', [
   'pmkr.filterStabilize'
@@ -77,53 +39,6 @@ angular.module('pmkr.partition', [
       return newArr;
 
     });
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.offset', [])
-
-.filter('pmkr.offset', [
-  function() {
-
-    var filter = function(input, offset) {
-
-      if (!input || !input.length) { return input; }
-
-      offset = parseInt(offset, 10);
-      return input.slice(offset);
-
-    };
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.slugify', [])
-
-.filter('pmkr.slugify', [
-  function() {
-
-    var filter = function(str) {
-
-      if (!str) { return str; }
-
-      var slug = str
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-      ;
-
-      return slug;
-
-    };
 
     return filter;
 
@@ -180,6 +95,32 @@ angular.module('pmkr.shuffle', [
 
 ;
 
+angular.module('pmkr.slugify', [])
+
+.filter('pmkr.slugify', [
+  function() {
+
+    function filter(str) {
+
+      if (!str) { return str; }
+
+      var slug = str
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^\w-]+/g, '')
+      ;
+
+      return slug;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
 angular.module('pmkr.spaceSentences', [])
 
 .filter('pmkr.spaceSentences', [
@@ -192,6 +133,65 @@ angular.module('pmkr.spaceSentences', [])
       var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
 
       return spaced;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.offset', [])
+
+.filter('pmkr.offset', [
+  function() {
+
+    function filter(input, offset) {
+
+      if (!input || !input.length) { return input; }
+
+      offset = parseInt(offset, 10);
+      return input.slice(offset);
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.limitEllipsis', [
+  'pmkr.stripTags',
+  'pmkr.spaceSentences'
+])
+
+.filter('pmkr.limitEllipsis', [
+  '$filter',
+  function($filter) {
+
+    var stripTags = $filter('pmkr.stripTags');
+    var spaceSentences = $filter('pmkr.spaceSentences');
+    var limitTo = $filter('limitTo');
+
+    function filter(str, limit, ellipsis) {
+
+      if (!str || !str.length) { return str; }
+
+      ellipsis = ellipsis || '...';
+
+      var text = spaceSentences(stripTags(str));
+
+      var limited = limitTo(text, limit);
+
+      if (limited === text) {
+        return limited;
+      }
+
+      return limited+ellipsis;
 
     }
 

@@ -3,7 +3,7 @@ angular.module('pmkr.slugify', [])
 .filter('pmkr.slugify', [
   function() {
 
-    var filter = function(str) {
+    function filter(str) {
 
       if (!str) { return str; }
 
@@ -15,7 +15,7 @@ angular.module('pmkr.slugify', [])
 
       return slug;
 
-    };
+    }
 
     return filter;
 
