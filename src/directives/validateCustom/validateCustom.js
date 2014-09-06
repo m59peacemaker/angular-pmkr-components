@@ -20,17 +20,32 @@ angular.module('pmkr.validateCustom', [
         var props = {
           pending : false,
           validating : false,
-          checkedValue : null
+          checkedValue : null,
+          valid : null,
+          invalid : null
         };
         // if opts.props is set, assign props to $scope
         opts.props && ($scope[opts.props] = props);
 
-        $ngModel.$setValidity(opts.name, true);
+        setValidity(true);
 
         var gate = false;
 
         var debouncedFn = debounce(validate, opts.wait);
         var latestFn = debounce.latest(debouncedFn);
+
+        $scope.$watch(function() {
+          return $ngModel.$viewValue;
+        }, valueChange);
+
+        function setValidity(isValid) {
+          $ngModel.$setValidity(opts.name, isValid);
+          if (gate) {
+            props.valid = props.invalid = null;
+          } else {
+            props.valid = !(props.invalid = !isValid);
+          }
+        }
 
         function validate(val) {
           if (gate) { return; }
@@ -42,24 +57,21 @@ angular.module('pmkr.validateCustom', [
 
           if (opts.gate && (gate = opts.gate(val, $ngModel))) {
             props.pending = props.validating = false;
-            $ngModel.$setValidity(opts.name, true);
+            setValidity(true);
             return;
           }
 
           props.pending = true;
+          props.valid = props.invalid = null;
 
           latestFn(val).then(function(isValid) {
             if (gate) { return; }
             props.checkedValue = val;
-            $ngModel.$setValidity(opts.name, isValid);
+            setValidity(isValid);
             props.pending = props.validating = false;
           });
 
         }
-
-        $scope.$watch(function() {
-          return $ngModel.$viewValue;
-        }, valueChange);
 
       } // link
 

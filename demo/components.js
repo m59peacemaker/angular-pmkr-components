@@ -1,11 +1,3 @@
-/*
-pmkr.components v0.0.0
-https://github.com/m59peacemaker/angular-pmkr-components
-License: MIT
-Author: Johnny Hauser
-File created: 9.6.2014
-*/
-
 angular.module('pmkr.components', [
   'pmkr.components.filters',
   'pmkr.components.services',

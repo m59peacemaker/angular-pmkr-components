@@ -1,8 +1,10 @@
 doctype html
 
-html
+html(ng-app="pmkr.componentsDemo")
 
   head
+
+    script(src="http://localhost:35729/livereload.js")
 
     script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.18/angular.min.js")
     script(src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js")
@@ -10,26 +12,20 @@ html
     link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css")
     link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css")
 
-    script
-    script.
-      angular.module('pmkr.componentsSamples', [
-        'ui.router'
-      ])
+    script(src="/components.js")
 
-      .config([
-        '$stateProvider',
-        function($stateProvider) {
-
-          $stateProvider
-          .state('validateCustom', {url:'/validateCustom', controller:'ValidateCustomController', templateUrl: '/samples/userNameUnique.html'})
-          ;
-
-        }
-      ])
+    script(src="/index.js")
+    script(src="/templates.js")
 
   body
 
-    nav
-      ul
-        li
-          a(ui-sref="validateCustom") Validate Custom
+    div.container
+
+      h1 PMKR ANGULAR COMPONENTS
+
+      nav.navbar.navbar-inverse
+        ul.nav.navbar-nav
+          li
+            a(ui-sref="validateCustom") Validate Custom
+
+      div(ui-view="")

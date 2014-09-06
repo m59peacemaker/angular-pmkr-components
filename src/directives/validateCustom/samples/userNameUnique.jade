@@ -1,12 +1,12 @@
 form.form-group.has-feedback(name="the_form")
 
-  div(ng-class="{"has-success":userNameUnique.valid, "has-warning":userNameUnique.invalid}")
+  div(ng-class="{'has-success':userNameUnique.valid, 'has-warning':userNameUnique.invalid}")
 
     label(for="user_name") Username
     input.form-control(
       name="user_name"
       ng-model="user.userName"
-      pmkr-validate-custom="{name:"unique", fn:checkUserNameUnique, gate:gateUserNameUnique, wait:500, props:"userNameUnique"}"
+      pmkr-validate-custom="{name:'unique', fn:checkUserNameUnique, gate:gateUserNameUnique, wait:500, props:'userNameUnique'}"
       pmkr-pristine-original=""
     )
 

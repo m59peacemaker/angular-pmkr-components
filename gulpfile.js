@@ -2,8 +2,11 @@ var gulp          = require('gulp');
 var templateCache = require('gulp-angular-templatecache');
 var clean         = require('gulp-clean');
 var concat        = require('gulp-concat');
+var connect       = require('gulp-connect');
 var header        = require('gulp-header');
 var jade          = require('gulp-jade');
+var karma         = require('karma').server;
+var rename        = require('gulp-rename');
 var sourcemaps    = require('gulp-sourcemaps');
 var uglify        = require('gulp-uglify');
 var gutil         = require('gulp-util');
@@ -27,15 +30,24 @@ var banner = (function() {
   return obj;
 }());
 
-gulp.task('default', [
-  'build'
-]);
+gulp.task('default', ['watch']);
+
+gulp.task('watch', [
+  'connect',
+  'tdd'
+], function() {
+  return gulp.watch(['src/**', 'src-demo/**'], ['build']);
+});
 
 gulp.task('build', [
   'components',
-  'samples',
-  'banner'
-]);
+  'banner',
+  'demo'
+], function() {
+  return gulp.src('demo/**')
+    .pipe(connect.reload())
+  ;
+});
 
 gulp.task('clean-build', function() {
   return gulp.src('build/*')
@@ -61,14 +73,14 @@ gulp.task('components', [
 ]);
 
 gulp.task('components-full', function() {
-  return gulp.src('src/**/*.js')
+  return gulp.src(['src/**/*.js', '!src/**/{tests,samples}/*.js'])
     .pipe(concat('components.js', {newLine: '\r\n\r\n'}))
     .pipe(gulp.dest('build'))
   ;
 });
 
 gulp.task('components-min', function() {
-  return gulp.src('src/**/*.js')
+  return gulp.src(['src/**/*.js', '!src/**/{test,samples}/*.js'])
     .pipe(sourcemaps.init())
       .pipe(concat('components.min.js'))
       .pipe(uglify())
@@ -80,8 +92,17 @@ gulp.task('components-min', function() {
 gulp.task('demo', [
   'demo-index-jade',
   'demo-js',
-  'demo-templates'
+  'demo-templates',
+  'demo-components'
 ]);
+
+gulp.task('demo-components', [
+  'components-full'
+], function() {
+  return gulp.src('build/components.js')
+    .pipe(gulp.dest('demo'))
+  ;
+});
 
 gulp.task('demo-index-jade', function() {
   return gulp.src('src-demo/index.jade')
@@ -91,16 +112,32 @@ gulp.task('demo-index-jade', function() {
 })
 
 gulp.task('demo-templates', function() {
-  return gulp.src(['src/*/samples/*.jade'])
+  return gulp.src(['src/**/samples/*.jade'])
     .pipe(jade())
+    .pipe(rename({dirname : 'tmpl'}))
     .pipe(templateCache('templates.js', {module:'pmkr.componentsDemo'}))
     .pipe(gulp.dest('demo'))
   ;
 });
 
 gulp.task('demo-js', function() {
-  return gulp.src(['src/*/src-demo/index.js', 'src/*/samples/*.js'])
-    .pipe(concat('samples.js', {newLine: '\r\n\r\n'}))
+  return gulp.src(['src-demo/index.js', 'src/**/samples/*.js'])
+    .pipe(concat('index.js', {newLine: '\r\n\r\n'}))
     .pipe(gulp.dest('demo'))
   ;
+});
+
+gulp.task('connect', function() {
+  connect.server({
+    root: 'demo',
+    fallback: 'demo/index.html',
+    port: '59',
+    livereload: true
+  });
+});
+
+gulp.task('tdd', ['build'], function() {
+  karma.start({
+    configFile: __dirname+'/karma.conf.js'
+  });
 });
