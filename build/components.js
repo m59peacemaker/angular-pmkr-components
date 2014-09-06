@@ -3,13 +3,17 @@ pmkr.components v0.0.0
 https://github.com/m59peacemaker/angular-pmkr-components
 License: MIT
 Author: Johnny Hauser
-File created: 9.1.2014
+File created: 9.3.2014
 */
 
 angular.module('pmkr.components', [
   'pmkr.components.filters',
   'pmkr.components.services',
   'pmkr.components.directives'
+]);
+
+angular.module('pmkr.componentsSamples', [
+  'ui.router'
 ]);
 
 angular.module('pmkr.components.directives', [
@@ -34,157 +38,37 @@ angular.module('pmkr.components.services', [
   'pmkr.rethrowException'
 ]);
 
-angular.module('pmkr.offset', [])
+angular.module('pmkr.pristineOriginal', [])
 
-.filter('pmkr.offset', [
+.directive('pmkrPristineOriginal', [
   function() {
 
-    function filter(input, offset) {
+    var directive = {
+      restrict : 'A',
+      require : 'ngModel',
+      link: function($scope, $element, $atts, $ngModel) {
 
-      if (!input || !input.length) { return input; }
+        var pristineVal = null;
 
-      offset = parseInt(offset, 10);
-      return input.slice(offset);
+        $scope.$watch(function() {
+          return $ngModel.$viewValue;
+        }, function(val) {
+          // set pristineVal to newVal the first time this function runs
+          if (pristineVal === null) {
+            pristineVal = $ngModel.$isEmpty(val) ? '' : val.toString();
+          }
 
-    }
+          // newVal is the original value - set input to pristine state
+          if (pristineVal === val) {
+            $ngModel.$setPristine();
+          }
 
-    return filter;
+        });
 
-  }
-])
-
-;
-
-angular.module('pmkr.partition', [
-  'pmkr.filterStabilize'
-])
-
-.filter('pmkr.partition', [
-  'pmkr.filterStabilize',
-  function(stabilize) {
-
-    var filter = stabilize(function(input, size) {
-
-      if (!input || !size) {
-        return input;
       }
-
-      var newArr = [];
-
-      for (var i = 0; i < input.length; i+= size) {
-        newArr.push(input.slice(i, i+size));
-      }
-
-      return newArr;
-
-    });
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.slugify', [])
-
-.filter('pmkr.slugify', [
-  function() {
-
-    function filter(str) {
-
-      if (!str) { return str; }
-
-      var slug = str
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-      ;
-
-      return slug;
-
-    }
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.rethrowException', [])
-
-.provider('pmkr.rethrowException', [
-  '$provide',
-  function($provide) {
-
-    this.init = function() {
-      $provide.decorator('$exceptionHandler', [
-        '$delegate',
-        decorator
-      ]);
     };
 
-    function decorator($delegate) {
-
-      function decorated(exception, cause) {
-        $delegate(exception, cause);
-        throw exception;
-      }
-
-      return decorated;
-
-    }
-
-    this.$get = function() {};
-
-  }
-])
-
-;
-
-angular.module('pmkr.shuffle', [
-  'pmkr.filterStabilize'
-])
-
-.filter('pmkr.shuffle', [
-  'pmkr.filterStabilize',
-  function(stabilize) {
-
-    var filter = stabilize(function(input) {
-
-      if (!input) { return input; }
-
-      if (typeof input === 'string') {
-        input = input.split('');
-        shuffle(input);
-        return input.join('');
-      } else {
-        shuffle(input);
-      }
-
-    });
-
-    // Fisher-Yates shuffle (https:github.com/coolaj86/knuth-shuffle)
-    function shuffle(arr) {
-
-      var currentIndex = arr.length;
-
-      while (0 !== currentIndex) {
-
-        var randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex-= 1;
-
-        var temporaryValue = arr[currentIndex];
-        arr[currentIndex] = arr[randomIndex];
-        arr[randomIndex] = temporaryValue;
-      }
-
-      return arr;
-
-    }
-
-    return filter;
+    return directive;
 
   }
 ])
@@ -264,138 +148,6 @@ angular.module('pmkr.validateCustom', [
 
 ;
 
-angular.module('pmkr.memoize', [])
-
-.factory('pmkr.memoize', [
-  function() {
-
-    function service() {
-      return memoizeFactory.apply(this, arguments);
-    }
-
-    function memoizeFactory(fn) {
-
-      var cache = {};
-
-      function memoized() {
-
-        var args = [].slice.call(arguments);
-
-        var key = JSON.stringify(args);
-
-        var fromCache = cache[key];
-        if (fromCache) {
-          return fromCache;
-        }
-
-        cache[key] = fn.apply(this, arguments);
-
-        return cache[key];
-
-      }
-
-      return memoized;
-
-    } // end service function
-
-    return service;
-
-  }
-])
-
-;
-
-angular.module('pmkr.pristineOriginal', [])
-
-.directive('pmkrPristineOriginal', [
-  function() {
-
-    var directive = {
-      restrict : 'A',
-      require : 'ngModel',
-      link: function($scope, $element, $atts, $ngModel) {
-
-        var pristineVal = null;
-
-        $scope.$watch(function() {
-          return $ngModel.$viewValue;
-        }, function(val) {
-          // set pristineVal to newVal the first time this function runs
-          if (pristineVal === null) {
-            pristineVal = $ngModel.$isEmpty(val) ? '' : val.toString();
-          }
-
-          // newVal is the original value - set input to pristine state
-          if (pristineVal === val) {
-            $ngModel.$setPristine();
-          }
-
-        });
-
-      }
-    };
-
-    return directive;
-
-  }
-])
-
-;
-
-angular.module('pmkr.filterStabilize', [
-  'pmkr.memoize'
-])
-
-.factory('pmkr.filterStabilize', [
-  'pmkr.memoize',
-  function(memoize) {
-
-    function service(fn) {
-
-      function filter() {
-        var args = [].slice.call(arguments);
-        // always pass a copy of the args so that the original input can't be modified
-        args = angular.copy(args);
-        // return the `fn` return value or input reference (makes `fn` return optional)
-        var filtered = fn.apply(this, args) || args[0];
-        return filtered;
-      }
-
-      var memoized = memoize(filter);
-
-      return memoized;
-
-    }
-
-    return service;
-
-  }
-])
-
-;
-
-angular.module('pmkr.spaceSentences', [])
-
-.filter('pmkr.spaceSentences', [
-  function() {
-
-    function filter(str) {
-
-      if (!str) { return str; }
-
-      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
-
-      return spaced;
-
-    }
-
-    return filter;
-
-  }
-])
-
-;
-
 angular.module('pmkr.limitEllipsis', [
   'pmkr.stripTags',
   'pmkr.spaceSentences'
@@ -424,6 +176,154 @@ angular.module('pmkr.limitEllipsis', [
       }
 
       return limited+ellipsis;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.offset', [])
+
+.filter('pmkr.offset', [
+  function() {
+
+    function filter(input, offset) {
+
+      if (!input || !input.length) { return input; }
+
+      offset = parseInt(offset, 10);
+      return input.slice(offset);
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.partition', [
+  'pmkr.filterStabilize'
+])
+
+.filter('pmkr.partition', [
+  'pmkr.filterStabilize',
+  function(stabilize) {
+
+    var filter = stabilize(function(input, size) {
+
+      if (!input || !size) {
+        return input;
+      }
+
+      var newArr = [];
+
+      for (var i = 0; i < input.length; i+= size) {
+        newArr.push(input.slice(i, i+size));
+      }
+
+      return newArr;
+
+    });
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.shuffle', [
+  'pmkr.filterStabilize'
+])
+
+.filter('pmkr.shuffle', [
+  'pmkr.filterStabilize',
+  function(stabilize) {
+
+    var filter = stabilize(function(input) {
+
+      if (!input) { return input; }
+
+      if (typeof input === 'string') {
+        input = input.split('');
+        shuffle(input);
+        return input.join('');
+      } else {
+        shuffle(input);
+      }
+
+    });
+
+    // Fisher-Yates shuffle (https:github.com/coolaj86/knuth-shuffle)
+    function shuffle(arr) {
+
+      var currentIndex = arr.length;
+
+      while (0 !== currentIndex) {
+
+        var randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex-= 1;
+
+        var temporaryValue = arr[currentIndex];
+        arr[currentIndex] = arr[randomIndex];
+        arr[randomIndex] = temporaryValue;
+      }
+
+      return arr;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.slugify', [])
+
+.filter('pmkr.slugify', [
+  function() {
+
+    function filter(str) {
+
+      if (!str) { return str; }
+
+      var slug = str
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^\w-]+/g, '')
+      ;
+
+      return slug;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.spaceSentences', [])
+
+.filter('pmkr.spaceSentences', [
+  function() {
+
+    function filter(str) {
+
+      if (!str) { return str; }
+
+      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
+
+      return spaced;
 
     }
 
@@ -566,5 +466,148 @@ angular.module('pmkr.debounce', [])
 
   }
 ])
+
+;
+
+angular.module('pmkr.filterStabilize', [
+  'pmkr.memoize'
+])
+
+.factory('pmkr.filterStabilize', [
+  'pmkr.memoize',
+  function(memoize) {
+
+    function service(fn) {
+
+      function filter() {
+        var args = [].slice.call(arguments);
+        // always pass a copy of the args so that the original input can't be modified
+        args = angular.copy(args);
+        // return the `fn` return value or input reference (makes `fn` return optional)
+        var filtered = fn.apply(this, args) || args[0];
+        return filtered;
+      }
+
+      var memoized = memoize(filter);
+
+      return memoized;
+
+    }
+
+    return service;
+
+  }
+])
+
+;
+
+angular.module('pmkr.memoize', [])
+
+.factory('pmkr.memoize', [
+  function() {
+
+    function service() {
+      return memoizeFactory.apply(this, arguments);
+    }
+
+    function memoizeFactory(fn) {
+
+      var cache = {};
+
+      function memoized() {
+
+        var args = [].slice.call(arguments);
+
+        var key = JSON.stringify(args);
+
+        var fromCache = cache[key];
+        if (fromCache) {
+          return fromCache;
+        }
+
+        cache[key] = fn.apply(this, arguments);
+
+        return cache[key];
+
+      }
+
+      return memoized;
+
+    } // end service function
+
+    return service;
+
+  }
+])
+
+;
+
+angular.module('pmkr.rethrowException', [])
+
+.provider('pmkr.rethrowException', [
+  '$provide',
+  function($provide) {
+
+    this.init = function() {
+      $provide.decorator('$exceptionHandler', [
+        '$delegate',
+        decorator
+      ]);
+    };
+
+    function decorator($delegate) {
+
+      function decorated(exception, cause) {
+        $delegate(exception, cause);
+        throw exception;
+      }
+
+      return decorated;
+
+    }
+
+    this.$get = function() {};
+
+  }
+])
+
+;
+
+angular.module('pmkr.componentsSamples')
+
+.controller('ValidateCustomController', function($scope, $q, $timeout) {
+
+  $scope.user.userName = 'myUserName';
+
+  $scope.checkUserNameUnique = function(val) {
+    var deferred = $q.defer();
+    $timeout(function() {
+      var isAvailable = !~getTakenUserNames.indexOf(val);
+      deferred.resolve(isAvailable);
+    }, 250);
+    return deferred.promise;
+  };
+
+  $scope.userNameUniqueGate = function(val, $ngModel) {
+    return !val || $ngModel.$pristine;
+  };
+
+  function getTakenUserNames() {
+    var takenUserNames = [
+      'm59peacemaker',
+      'SomeKittens',
+      'Jhawins',
+      'SterlingArcher',
+      'rlemon',
+      'Benjamin',
+      'Florian',
+      'phenom',
+      'Loktar',
+      'Zirak'
+    ];
+    return takenUserNames;
+  }
+
+})
 
 ;

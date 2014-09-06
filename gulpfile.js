@@ -1,11 +1,12 @@
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var clean = require('gulp-clean');
-var rename = require('gulp-rename');
-var concat = require('gulp-concat');
-var header = require('gulp-header');
-var uglify = require('gulp-uglify');
-var sourcemaps = require('gulp-sourcemaps');
+var gulp          = require('gulp');
+var templateCache = require('gulp-angular-templatecache');
+var clean         = require('gulp-clean');
+var concat        = require('gulp-concat');
+var header        = require('gulp-header');
+var jade          = require('gulp-jade');
+var sourcemaps    = require('gulp-sourcemaps');
+var uglify        = require('gulp-uglify');
+var gutil         = require('gulp-util');
 
 var pkg = require('./package.json');
 
@@ -31,99 +32,33 @@ gulp.task('default', [
 ]);
 
 gulp.task('build', [
-  'filters',
-  'services',
-  'directives',
   'components',
+  'samples',
   'banner'
 ]);
 
 gulp.task('clean-build', function() {
-  return gulp.src('*', {cwd:'build'})
+  return gulp.src('build/*')
     .pipe(clean())
+});
+
+gulp.task('clean-demo', function() {
+  return gulp.src('demo/*')
+  .pipe(clean())
 });
 
 gulp.task('banner', [
   'components'
 ], function() {
-  return gulp.src('**/*.js', {
-    cwd: 'build',
-    base:'build'
-  })
+  return gulp.src('build/**/*.js')
     .pipe(header(banner.ml, banner.data))
     .pipe(gulp.dest('build'))
 });
-
-gulp.task('filters', [
-  'filters-full',
-  'filters-min'
-]);
-
-gulp.task('services', [
-  'services-full',
-  'services-min'
-]);
-
-gulp.task('directives', [
-  'directives-full',
-  'directives-min'
-]);
 
 gulp.task('components', [
   'components-full',
   'components-min'
 ]);
-
-gulp.task('filters-full', function() {
-  return gulp.src('src/filters/**/*.js')
-    .pipe(concat('filters.js', {newLine: '\r\n\r\n'}))
-    .pipe(gulp.dest('build'))
-  ;
-});
-
-gulp.task('filters-min', function() {
-  return gulp.src('src/filters/**/*.js')
-    .pipe(sourcemaps.init())
-      .pipe(concat('filters.min.js'))
-      .pipe(uglify())
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('build'))
-  ;
-});
-
-gulp.task('services-full', function() {
-  return gulp.src('src/services/**/*.js')
-    .pipe(concat('services.js', {newLine: '\r\n\r\n'}))
-    .pipe(gulp.dest('build'))
-  ;
-});
-
-gulp.task('services-min', function() {
-  return gulp.src('src/services/**/*.js')
-    .pipe(sourcemaps.init())
-      .pipe(concat('services.min.js'))
-      .pipe(uglify())
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('build'))
-  ;
-});
-
-gulp.task('directives-full', function() {
-  return gulp.src('src/directives/**/*.js')
-    .pipe(concat('directives.js', {newLine: '\r\n\r\n'}))
-    .pipe(gulp.dest('build'))
-  ;
-});
-
-gulp.task('directives-min', function() {
-  return gulp.src('src/directives/**/*.js')
-    .pipe(sourcemaps.init())
-      .pipe(concat('directives.min.js'))
-      .pipe(uglify())
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('build'))
-  ;
-});
 
 gulp.task('components-full', function() {
   return gulp.src('src/**/*.js')
@@ -139,4 +74,33 @@ gulp.task('components-min', function() {
       .pipe(uglify())
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('build'))
+  ;
+});
+
+gulp.task('demo', [
+  'demo-index-jade',
+  'demo-js',
+  'demo-templates'
+]);
+
+gulp.task('demo-index-jade', function() {
+  return gulp.src('src-demo/index.jade')
+    .pipe(jade())
+    .pipe(gulp.dest('demo'))
+  ;
+})
+
+gulp.task('demo-templates', function() {
+  return gulp.src(['src/*/samples/*.jade'])
+    .pipe(jade())
+    .pipe(templateCache('templates.js', {module:'pmkr.componentsDemo'}))
+    .pipe(gulp.dest('demo'))
+  ;
+});
+
+gulp.task('demo-js', function() {
+  return gulp.src(['src/*/src-demo/index.js', 'src/*/samples/*.js'])
+    .pipe(concat('samples.js', {newLine: '\r\n\r\n'}))
+    .pipe(gulp.dest('demo'))
+  ;
 });

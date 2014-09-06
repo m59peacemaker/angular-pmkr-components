@@ -15,15 +15,19 @@ angular.module('pmkr.validateCustom', [
       link: function($scope, $element, $attrs, $ngModel) {
 
         var opts = $scope.$eval($attrs.pmkrValidateCustom);
-        var props = {};
+
+        // this reference is used as a convenience for $scope[opts.props]
+        var props = {
+          pending : false,
+          validating : false,
+          checkedValue : null
+        };
+        // if opts.props is set, assign props to $scope
         opts.props && ($scope[opts.props] = props);
 
-        var valid = true; // field is initially valid
-        var gate = false;
+        $ngModel.$setValidity(opts.name, true);
 
-        $ngModel.$validators[opts.name] = function() {
-          return valid;
-        };
+        var gate = false;
 
         var debouncedFn = debounce(validate, opts.wait);
         var latestFn = debounce.latest(debouncedFn);
@@ -36,10 +40,9 @@ angular.module('pmkr.validateCustom', [
 
         function valueChange(val) {
 
-          props.valid = props.invalid = false;
-
           if (opts.gate && (gate = opts.gate(val, $ngModel))) {
             props.pending = props.validating = false;
+            $ngModel.$setValidity(opts.name, true);
             return;
           }
 
@@ -48,9 +51,7 @@ angular.module('pmkr.validateCustom', [
           latestFn(val).then(function(isValid) {
             if (gate) { return; }
             props.checkedValue = val;
-            valid = props.valid = isValid;
-            props.invalid = !valid;
-            $ngModel.$validate();
+            $ngModel.$setValidity(opts.name, isValid);
             props.pending = props.validating = false;
           });
 
