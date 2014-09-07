@@ -287,6 +287,28 @@ angular.module('pmkr.shuffle', [
 
 ;
 
+angular.module('pmkr.spaceSentences', [])
+
+.filter('pmkr.spaceSentences', [
+  function() {
+
+    function filter(str) {
+
+      if (!str) { return str; }
+
+      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
+
+      return spaced;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
 angular.module('pmkr.slugify', [])
 
 .filter('pmkr.slugify', [
@@ -303,28 +325,6 @@ angular.module('pmkr.slugify', [])
       ;
 
       return slug;
-
-    }
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.spaceSentences', [])
-
-.filter('pmkr.spaceSentences', [
-  function() {
-
-    function filter(str) {
-
-      if (!str) { return str; }
-
-      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
-
-      return spaced;
 
     }
 
@@ -502,37 +502,6 @@ angular.module('pmkr.filterStabilize', [
 
 ;
 
-angular.module('pmkr.rethrowException', [])
-
-.provider('pmkr.rethrowException', [
-  '$provide',
-  function($provide) {
-
-    this.init = function() {
-      $provide.decorator('$exceptionHandler', [
-        '$delegate',
-        decorator
-      ]);
-    };
-
-    function decorator($delegate) {
-
-      function decorated(exception, cause) {
-        $delegate(exception, cause);
-        throw exception;
-      }
-
-      return decorated;
-
-    }
-
-    this.$get = function() {};
-
-  }
-])
-
-;
-
 angular.module('pmkr.memoize', [])
 
 .factory('pmkr.memoize', [
@@ -568,6 +537,37 @@ angular.module('pmkr.memoize', [])
     } // end service function
 
     return service;
+
+  }
+])
+
+;
+
+angular.module('pmkr.rethrowException', [])
+
+.provider('pmkr.rethrowException', [
+  '$provide',
+  function($provide) {
+
+    this.init = function() {
+      $provide.decorator('$exceptionHandler', [
+        '$delegate',
+        decorator
+      ]);
+    };
+
+    function decorator($delegate) {
+
+      function decorated(exception, cause) {
+        $delegate(exception, cause);
+        throw exception;
+      }
+
+      return decorated;
+
+    }
+
+    this.$get = function() {};
 
   }
 ])
