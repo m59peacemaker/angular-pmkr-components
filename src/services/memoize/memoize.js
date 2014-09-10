@@ -30,7 +30,7 @@ angular.module('pmkr.memoize', [])
 
       return memoized;
 
-    } // end service function
+    }
 
     return service;
 

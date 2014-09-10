@@ -12,6 +12,7 @@ angular.module('pmkr.debounce', [])
 ;
 
 describe('validateCustom', function() {
+
   var $compile;
   var $scope;
   var $provide;

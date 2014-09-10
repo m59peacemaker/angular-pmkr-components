@@ -1,4 +1,5 @@
 describe('pristineOriginal', function() {
+
   var $compile;
   var $scope;
   var $formElem;
