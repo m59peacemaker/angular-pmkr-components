@@ -34,22 +34,33 @@ angular.module('pmkr.pristineOriginal', [])
     var directive = {
       restrict : 'A',
       require : 'ngModel',
-      link: function($scope, $element, $atts, $ngModel) {
+      link: function($scope, $element, $attrs, $ngModel) {
+
+        var defaults = {
+          caseSensitive: true
+        };
+        var opts = $scope.$eval($attrs.pmkrPristineOriginal);
+        opts = angular.extend(defaults, opts);
 
         var pristineVal = null;
 
         $scope.$watch(function() {
           return $ngModel.$viewValue;
         }, function(val) {
+
           // set pristineVal to newVal the first time this function runs
           if (pristineVal === null) {
             pristineVal = $ngModel.$isEmpty(val) ? '' : val.toString();
           }
 
-          // newVal is the original value - set input to pristine state
+          // determine/set $pristine state
+          var shouldBePristine;
           if (pristineVal === val) {
-            $ngModel.$setPristine();
+            shouldBePristine = true;
+          } else if (!opts.caseSensitive && pristineVal.toLowerCase() === val.toLowerCase()) {
+            shouldBePristine = true;
           }
+          shouldBePristine && $ngModel.$setPristine();
 
         });
 

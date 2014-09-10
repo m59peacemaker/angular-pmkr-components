@@ -18,10 +18,25 @@ angular.module('pmkr.componentsDemo', [
 
     $stateProvider
     .state('validateCustom', {url:'/validateCustom', controller:'ValidateCustomController', templateUrl: 'tmpl/userNameUnique.html'})
+    .state('pristineOriginal', {url:'/pristineOriginal', controller:'PristineOriginalController', templateUrl: 'tmpl/pristineOriginal.html'})
     ;
 
   }
 ])
+
+angular.module('pmkr.componentsDemo')
+
+.controller('PristineOriginalController', [
+  '$scope',
+  function($scope) {
+
+    $scope.foo = $scope.originalValue = 'Test';
+    $scope.opts = {caseSensitive:false};
+
+  }
+])
+
+;
 
 angular.module('pmkr.componentsDemo')
 

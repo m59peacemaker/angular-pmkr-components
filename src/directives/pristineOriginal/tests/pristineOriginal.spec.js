@@ -10,8 +10,9 @@ describe('pristineOriginal', function() {
     $compile = _$compile_;
     $scope = _$rootScope_;
 
+    $scope.opts = {};
     $formElem = angular.element('<form name="form"></form>');
-    $inputElem = angular.element('<input name="foo" ng-model="foo" pmkr-pristine-original="">');
+    $inputElem = angular.element('<input name="foo" ng-model="foo" pmkr-pristine-original="opts">');
     $formElem.append($inputElem);
   }));
 
@@ -38,6 +39,17 @@ describe('pristineOriginal', function() {
     expect($scope.form.foo.$dirty).toBe(true);
 
     $scope.form.foo.$setViewValue('abc');
+    $scope.$digest();
+    expect($scope.form.foo.$pristine).toBe(true);
+  });
+
+  it('should return ngModel to pristine when original value is "abc" and value becomes "Abc" if `opts.caseSensitive:false`', function() {
+    $scope.foo = 'abc';
+    $scope.opts.caseSensitive = false;
+    $compile($formElem)($scope);
+    $scope.$digest();
+
+    $scope.form.foo.$setViewValue('Abc');
     $scope.$digest();
     expect($scope.form.foo.$pristine).toBe(true);
   });

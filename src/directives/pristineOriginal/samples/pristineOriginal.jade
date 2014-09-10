@@ -1,0 +1,11 @@
+p Original Value: {{originalValue}} (not case sensitive)
+
+form(name="form")
+  input.form-control(
+    name="foo"
+    ng-model="foo"
+    pmkr-pristine-original="opts"
+  )
+
+p.alert.alert-success(ng-show="form.foo.$pristine") The field is pristine.
+p.alert.alert-success(ng-show="form.foo.$dirty") The field is dirty.
