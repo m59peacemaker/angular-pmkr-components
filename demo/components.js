@@ -92,17 +92,21 @@ angular.module('pmkr.validateCustom', [
         // if opts.props is set, assign props to $scope
         opts.props && ($scope[opts.props] = props);
 
-        setValidity(true);
-
-        var gate = false;
-
+        // debounce validation function
         var debouncedFn = debounce(validate, opts.wait);
         var latestFn = debounce.latest(debouncedFn);
+
+        // initially valid
+        $ngModel.$setValidity(opts.name, true);
+
+        // track gated state
+        var gate;
 
         $scope.$watch(function() {
           return $ngModel.$viewValue;
         }, valueChange);
 
+        // set model validity and props based on gated state
         function setValidity(isValid) {
           $ngModel.$setValidity(opts.name, isValid);
           if (gate) {
@@ -287,28 +291,6 @@ angular.module('pmkr.shuffle', [
 
 ;
 
-angular.module('pmkr.spaceSentences', [])
-
-.filter('pmkr.spaceSentences', [
-  function() {
-
-    function filter(str) {
-
-      if (!str) { return str; }
-
-      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
-
-      return spaced;
-
-    }
-
-    return filter;
-
-  }
-])
-
-;
-
 angular.module('pmkr.slugify', [])
 
 .filter('pmkr.slugify', [
@@ -325,6 +307,28 @@ angular.module('pmkr.slugify', [])
       ;
 
       return slug;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.spaceSentences', [])
+
+.filter('pmkr.spaceSentences', [
+  function() {
+
+    function filter(str) {
+
+      if (!str) { return str; }
+
+      var spaced = str.replace(/(\w)([.!?]+)(\w)/gi, '$1$2 $3');
+
+      return spaced;
 
     }
 

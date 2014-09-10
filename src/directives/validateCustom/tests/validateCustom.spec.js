@@ -59,7 +59,7 @@ describe('validateCustom', function() {
     expect($scope.form.foo.$error.unique).toBe(false);
   });
 
-  it('should not call opts.fn when gated', function() {
+  it('should not call `opts.fn` when gated', function() {
     $scope.opts.fn = function(){};
     $scope.opts.gate = function() { return true; };
 
@@ -80,7 +80,7 @@ describe('validateCustom', function() {
     expect($scope.form.foo.$error.unique).toBe(false);
   });
 
-  it('should wrap opts.fn in debounce and debounce.latest', function() {
+  it('should wrap `opts.fn` in `debounce` and `debounce.latest`', function() {
     var debounced = false;
     var debouncedLatest = false;
 
@@ -101,7 +101,7 @@ describe('validateCustom', function() {
     expect(debouncedLatest).toBe(true);
   });
 
-  it('should be valid when opts.fn returns true', function() {
+  it('should be valid when `opts.fn` returns `true`', function() {
     $scope.opts.fn = function() { return true; };
 
     $inputElem.attr('pmkr-validate-custom', 'opts');
@@ -111,7 +111,7 @@ describe('validateCustom', function() {
     expect($scope.form.foo.$error.unique).toBe(false);
   });
 
-  it('should be invalid when opts.fn returns false', function() {
+  it('should set $error[opts.name] `true` when `opts.fn` returns `false`', function() {
     $scope.opts.fn = function() { return false; };
 
     $inputElem.attr('pmkr-validate-custom', 'opts');
@@ -121,7 +121,7 @@ describe('validateCustom', function() {
     expect($scope.form.foo.$error.unique).toBe(true);
   });
 
-  it('should set props.pending = true while debouncing/validating', function() {
+  it('should set `props.pending` `true` while debouncing/validating', function() {
 
     $provide.decorator('pmkr.debounce', function($q) {
       function debounce(fn) {
@@ -147,7 +147,7 @@ describe('validateCustom', function() {
     expect($scope.fooProps.pending).toBe(false);
   });
 
-  it('should set props.validating = true while validating', function() {
+  it('should set `props.validating` `true` while validating', function() {
 
     $provide.decorator('pmkr.debounce', function($q) {
       function debounce(fn) {
@@ -173,7 +173,22 @@ describe('validateCustom', function() {
     expect($scope.fooProps.validating).toBe(false);
   });
 
-  it('should set props.checkedValue to the most recent checked value', function() {
+  it('should set `props.pending`,`props.validating` to `false` when gated', function () {
+    $scope.opts.gate = function() { return true; };
+    $scope.opts.props = 'fooProps';
+
+    $inputElem.attr('pmkr-validate-custom', 'opts');
+    $compile($formElem)($scope);
+    expect($scope.fooProps.pending).toBe(false);
+    expect($scope.fooProps.validating).toBe(false);
+    $scope.fooProps.pending = true;
+    $scope.fooProps.validating = true;
+    $scope.$digest();
+    expect($scope.fooProps.pending).toBe(false);
+    expect($scope.fooProps.validating).toBe(false);
+  });
+
+  it('should set `props.checkedValue` to the most recent checked value', function() {
     $scope.opts.fn = function() { return true; };
     $scope.opts.props = 'fooProps';
 
@@ -183,6 +198,37 @@ describe('validateCustom', function() {
     $scope.form.foo.$setViewValue('abc');
     $scope.$digest();
     expect($scope.fooProps.checkedValue).toBe('abc');
+  });
+
+  it('should initially set `props.valid` and `props.invalid` to `null`', function() {
+    $scope.opts.props = 'fooProps';
+
+    $inputElem.attr('pmkr-validate-custom', 'opts');
+    $compile($formElem)($scope);
+    expect($scope.fooProps.valid).toBe(null);
+    expect($scope.fooProps.invalid).toBe(null);
+  });
+
+  it('should set `props.valid` and `props.invalid` to `null` when gated', function() {
+    $scope.opts.props = 'fooProps';
+    $scope.opts.gate = function() { return true; };
+
+    $inputElem.attr('pmkr-validate-custom', 'opts');
+    $compile($formElem)($scope);
+    $scope.$digest();
+    expect($scope.fooProps.valid).toBe(null);
+    expect($scope.fooProps.invalid).toBe(null);
+  });
+
+  it('should set `props.valid` and `props.invalid` to result after validating', function() {
+    $scope.opts.fn = function() { return true; };
+    $scope.opts.props = 'fooProps';
+
+    $inputElem.attr('pmkr-validate-custom', 'opts');
+    $compile($formElem)($scope);
+    $scope.$digest();
+    expect($scope.fooProps.valid).toBe(true);
+    expect($scope.fooProps.invalid).toBe(false);
   });
 
 });

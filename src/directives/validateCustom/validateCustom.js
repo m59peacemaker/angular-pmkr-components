@@ -27,17 +27,21 @@ angular.module('pmkr.validateCustom', [
         // if opts.props is set, assign props to $scope
         opts.props && ($scope[opts.props] = props);
 
-        setValidity(true);
-
-        var gate = false;
-
+        // debounce validation function
         var debouncedFn = debounce(validate, opts.wait);
         var latestFn = debounce.latest(debouncedFn);
+
+        // initially valid
+        $ngModel.$setValidity(opts.name, true);
+
+        // track gated state
+        var gate;
 
         $scope.$watch(function() {
           return $ngModel.$viewValue;
         }, valueChange);
 
+        // set model validity and props based on gated state
         function setValidity(isValid) {
           $ngModel.$setValidity(opts.name, isValid);
           if (gate) {

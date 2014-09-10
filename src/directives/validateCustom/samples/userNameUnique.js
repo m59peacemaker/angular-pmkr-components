@@ -30,7 +30,9 @@ angular.module('pmkr.componentsDemo')
     'phenom',
     'Loktar',
     'Zirak',
-    'TehStrike'
+    'TehStrike',
+    'Wes',
+    'SomeGuy'
   ];
 
 })
