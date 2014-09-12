@@ -34,10 +34,10 @@ gulp.task('default', ['watch']);
 
 gulp.task('watch', [
   'connect',
-  'tdd'
-], function() {
-  return gulp.watch(['src/**', 'src-demo/**'], ['build']);
-});
+  'tdd',
+  'watch-components',
+  'watch-demo'
+]);
 
 gulp.task('build', [
   'components',
@@ -72,13 +72,17 @@ gulp.task('components', [
   'components-min'
 ]);
 
+gulp.task('watch-components', [
+
+], function() {
+  return gulp.watch(['src/**/*.js', '!src/**/{tests,samples}/*.js'], ['components-full', 'components-min']);
+});
 gulp.task('components-full', function() {
   return gulp.src(['src/**/*.js', '!src/**/{tests,samples}/*.js'])
     .pipe(concat('components.js', {newLine: '\r\n\r\n'}))
     .pipe(gulp.dest('build'))
   ;
 });
-
 gulp.task('components-min', function() {
   return gulp.src(['src/**/*.js', '!src/**/{test,samples}/*.js'])
     .pipe(sourcemaps.init())
@@ -89,6 +93,11 @@ gulp.task('components-min', function() {
   ;
 });
 
+gulp.task('watch-demo', [
+
+], function() {
+  return gulp.watch(['build/components.js', 'src-demo/**', 'src/**/samples/**'])
+});
 gulp.task('demo', [
   'demo-index-jade',
   'demo-js',

@@ -35,15 +35,29 @@ describe('filterStabilize', function() {
     expect($scope.$digest.bind($scope)).not.toThrow();
   });
 
-  it('prevents filter from modifying input reference', function() {
+  it('prevents filter from modifying original input reference', function() {
     $filterProvider.register('testFilter', ['pmkr.filterStabilize', function(stabilize) {
-      return stabilize(function(arr) { return arr.pop(); });
+      return stabilize(function(arr) {
+        arr[0] = 'abc';
+        return arr;
+      });
     }]);
     $scope.foo = [1,2,3];
     var elem = angular.element("<p>{{foo|testFilter}}</p>");
     $compile(elem)($scope);
     $scope.$digest();
     expect($scope.foo).toEqual([1,2,3]);
+  });
+
+  it('makes `return` of input reference optional', function() {
+    $filterProvider.register('testFilter', ['pmkr.filterStabilize', function(stabilize) {
+      return stabilize(function(arr) { arr[0] = 'abc' });
+    }]);
+    $scope.foo = [1,2,3];
+    var elem = angular.element("<p>{{foo|testFilter}}</p>");
+    $compile(elem)($scope);
+    $scope.$digest();
+    expect($scope.$eval(elem.text())).toEqual(['abc',2,3]);
   });
 
 });

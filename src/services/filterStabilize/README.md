@@ -57,7 +57,7 @@ Because the service is caching results according to the input arguments, passing
 {{myData | myFilter:anyValue}}
 ```
 
-You can trigger a refilter by chaning the arbitrary argument.
+You can trigger a refilter by changing the arbitrary argument.
 
 ```
 {{myData | myFilter:abitraryArg}}

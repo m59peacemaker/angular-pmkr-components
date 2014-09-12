@@ -7,7 +7,7 @@ module.exports = function(config) {
       'vendor/angular/angular.js',
       'vendor/angular-mocks/angular-mocks.js',
       'build/components.js',
-      'src/**/*.spec.js'
+      'src/**/tests/*.spec.js'
     ]
   });
 };

@@ -1,16 +1,3 @@
-angular.module('pmkr.debounce', [])
-.factory('pmkr.debounce', function($q) {
-  function debounce(fn) {
-    return function() {
-      return $q.when(fn());
-    }
-  }
-  var service = debounce;
-  service.latest = debounce;
-  return service;
-})
-;
-
 describe('validateCustom', function() {
 
   var $compile;
@@ -22,8 +9,21 @@ describe('validateCustom', function() {
   beforeEach(module('pmkr.validateCustom'));
 
   beforeEach(module(['$provide', function(_$provide_) {
+
     $provide = _$provide_;
-  }]))
+
+    $provide.factory('pmkr.debounce', function($q) {
+      function debounce(fn) {
+        return function() {
+          return $q.when(fn());
+        }
+      }
+      var service = debounce;
+      service.latest = debounce;
+      return service;
+    });
+
+  }]));
 
   beforeEach(inject(function(_$compile_, _$rootScope_){
     $compile = _$compile_;
@@ -57,7 +57,7 @@ describe('validateCustom', function() {
   it('should initially be valid', function() {
     $inputElem.attr('pmkr-validate-custom', 'opts');
     $compile($formElem)($scope);
-    expect($scope.form.foo.$error.unique).toBe(false);
+    expect($scope.form.foo.$error.unique).toBeFalsy();
   });
 
   it('should not call `opts.fn` when gated', function() {
@@ -78,7 +78,7 @@ describe('validateCustom', function() {
     $compile($formElem)($scope);
     $scope.form.foo.$setValidity('unique', false);
     $scope.$digest();
-    expect($scope.form.foo.$error.unique).toBe(false);
+    expect($scope.form.foo.$error.unique).toBeFalsy();
   });
 
   it('should wrap `opts.fn` in `debounce` and `debounce.latest`', function() {
@@ -109,7 +109,7 @@ describe('validateCustom', function() {
     $compile($formElem)($scope);
     $scope.form.foo.$setValidity('unique', false);
     $scope.$digest();
-    expect($scope.form.foo.$error.unique).toBe(false);
+    expect($scope.form.foo.$error.unique).toBeFalsy();
   });
 
   it('should set $error[opts.name] `true` when `opts.fn` returns `false`', function() {
