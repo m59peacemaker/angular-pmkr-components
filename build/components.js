@@ -3,7 +3,7 @@ pmkr.components v0.0.0
 https://github.com/m59peacemaker/angular-pmkr-components
 License: MIT
 Author: Johnny Hauser
-File created: 9.12.2014
+File created: 9.13.2014
 */
 
 angular.module('pmkr.components', [
@@ -17,6 +17,13 @@ angular.module('pmkr.components.directives', [
   'pmkr.validateCustom'
 ]);
 
+angular.module('pmkr.components.services', [
+  'pmkr.debounce',
+  'pmkr.memoize',
+  'pmkr.filterStabilize',
+  'pmkr.rethrowException'
+]);
+
 angular.module('pmkr.components.filters', [
   'pmkr.offset',
   'pmkr.partition',
@@ -25,13 +32,6 @@ angular.module('pmkr.components.filters', [
   'pmkr.stripTags',
   'pmkr.spaceSentences',
   'pmkr.limitEllipsis'
-]);
-
-angular.module('pmkr.components.services', [
-  'pmkr.debounce',
-  'pmkr.memoize',
-  'pmkr.filterStabilize',
-  'pmkr.rethrowException'
 ]);
 
 angular.module('pmkr.pristineOriginal', [])
@@ -262,6 +262,32 @@ angular.module('pmkr.partition', [
 
 ;
 
+angular.module('pmkr.slugify', [])
+
+.filter('pmkr.slugify', [
+  function() {
+
+    function filter(str) {
+
+      if (!str) { return str; }
+
+      var slug = str
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^\w-]+/g, '')
+      ;
+
+      return slug;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
 angular.module('pmkr.shuffle', [
   'pmkr.filterStabilize'
 ])
@@ -300,32 +326,6 @@ angular.module('pmkr.shuffle', [
       }
 
       return arr;
-
-    }
-
-    return filter;
-
-  }
-])
-
-;
-
-angular.module('pmkr.slugify', [])
-
-.filter('pmkr.slugify', [
-  function() {
-
-    function filter(str) {
-
-      if (!str) { return str; }
-
-      var slug = str
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-      ;
-
-      return slug;
 
     }
 

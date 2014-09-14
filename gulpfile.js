@@ -10,6 +10,7 @@ var rename        = require('gulp-rename');
 var sourcemaps    = require('gulp-sourcemaps');
 var uglify        = require('gulp-uglify');
 var gutil         = require('gulp-util');
+var connectLiveReload = require('connect-livereload')({port: 35729});
 
 var pkg = require('./package.json');
 
@@ -30,8 +31,9 @@ var banner = (function() {
   return obj;
 }());
 
-gulp.task('default', ['watch']);
 
+
+gulp.task('default', ['watch']);
 gulp.task('watch', [
   'connect',
   'tdd',
@@ -39,15 +41,27 @@ gulp.task('watch', [
   'watch-demo'
 ]);
 
+
+
+/*** BUILD ***/
+
 gulp.task('build', [
   'components',
   'banner',
   'demo'
+]);
+
+gulp.task('banner', [
+  'components'
 ], function() {
-  return gulp.src('demo/**')
-    .pipe(connect.reload())
-  ;
+  return gulp.src('build/**/*.js')
+  .pipe(header(banner.ml, banner.data))
+  .pipe(gulp.dest('build'))
 });
+
+
+
+/*** CLEAN ***/
 
 gulp.task('clean-build', function() {
   return gulp.src('build/*')
@@ -59,23 +73,49 @@ gulp.task('clean-demo', function() {
   .pipe(clean())
 });
 
-gulp.task('banner', [
-  'components'
-], function() {
-  return gulp.src('build/**/*.js')
-    .pipe(header(banner.ml, banner.data))
-    .pipe(gulp.dest('build'))
+
+
+/*** SERVER ***/
+
+gulp.task('connect', function() {
+  connect.server({
+    root: 'demo',
+    fallback: 'demo/index.html',
+    port: '59',
+    livereload: {
+      port: 35729
+    },
+    middleware: function(connect, opt) {
+      return [
+        connectLiveReload
+      ];
+    }
+  });
 });
+
+
+
+/*** TESTING ***/
+
+gulp.task('tdd', ['build'], function() {
+  karma.start({
+    configFile: __dirname+'/karma.conf.js'
+  });
+});
+
+
+
+/*** COMPONENTS ***/
 
 gulp.task('components', [
   'components-full',
   'components-min'
 ]);
 
-gulp.task('watch-components', [
-
-], function() {
-  return gulp.watch(['src/**/*.js', '!src/**/{tests,samples}/*.js'], ['components-full', 'components-min']);
+gulp.task('watch-components', function() {
+  return gulp.watch(['src/**/*.js', '!src/**/{tests,samples}/*.js'],
+    ['components-full', 'components-min']
+  );
 });
 gulp.task('components-full', function() {
   return gulp.src(['src/**/*.js', '!src/**/{tests,samples}/*.js'])
@@ -93,11 +133,24 @@ gulp.task('components-min', function() {
   ;
 });
 
-gulp.task('watch-demo', [
 
-], function() {
-  return gulp.watch(['build/components.js', 'src-demo/**', 'src/**/samples/**'])
+
+/*** DEMO ***/
+
+gulp.task('watch-demo', ['reload-demo'], function() {
+  return gulp.watch(['build/components.js', 'src-demo/**/*.*', 'src/**/samples/**/*.*'], [
+    'demo'
+  ]);
 });
+
+gulp.task('reload-demo', function() {
+  return gulp.watch('demo/**/*.*', function() {
+    gulp.src('demo/**/*.*')
+    .pipe(connect.reload())
+    ;
+  });
+});
+
 gulp.task('demo', [
   'demo-index-jade',
   'demo-js',
@@ -105,48 +158,31 @@ gulp.task('demo', [
   'demo-components'
 ]);
 
-gulp.task('demo-components', [
-  'components-full'
-], function() {
+gulp.task('demo-components', function() {
   return gulp.src('build/components.js')
-    .pipe(gulp.dest('demo'))
+  .pipe(gulp.dest('demo'))
   ;
 });
 
 gulp.task('demo-index-jade', function() {
   return gulp.src('src-demo/index.jade')
-    .pipe(jade())
-    .pipe(gulp.dest('demo'))
+  .pipe(jade())
+  .pipe(gulp.dest('demo'))
   ;
 })
 
 gulp.task('demo-templates', function() {
   return gulp.src(['src/**/samples/*.jade'])
-    .pipe(jade())
-    .pipe(rename({dirname : 'tmpl'}))
-    .pipe(templateCache('templates.js', {module:'pmkr.componentsDemo'}))
-    .pipe(gulp.dest('demo'))
+  .pipe(jade())
+  .pipe(rename({dirname : 'tmpl'}))
+  .pipe(templateCache('templates.js', {module:'pmkr.componentsDemo'}))
+  .pipe(gulp.dest('demo'))
   ;
 });
 
 gulp.task('demo-js', function() {
   return gulp.src(['src-demo/index.js', 'src/**/samples/*.js'])
-    .pipe(concat('index.js', {newLine: '\r\n\r\n'}))
-    .pipe(gulp.dest('demo'))
+  .pipe(concat('index.js', {newLine: '\r\n\r\n'}))
+  .pipe(gulp.dest('demo'))
   ;
-});
-
-gulp.task('connect', function() {
-  connect.server({
-    root: 'demo',
-    fallback: 'demo/index.html',
-    port: '59',
-    livereload: true
-  });
-});
-
-gulp.task('tdd', ['build'], function() {
-  karma.start({
-    configFile: __dirname+'/karma.conf.js'
-  });
 });

@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "connect-livereload": "^0.4.0",
     "gulp": "^3.7.0",
     "gulp-angular-templatecache": "^1.3.0",
     "gulp-clean": "^0.3.0",
