@@ -1,0 +1,70 @@
+doctype html
+
+html(ng-app="pmkr.componentsDemo")
+
+  head
+
+    script window.location.hostname !== 'localhost' && document.write('<base href="/angular-pmkr-components/">');
+
+    script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.18/angular.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js")
+
+    link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css")
+    link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css")
+
+    script(src="components.js")
+
+    script(src="index.js")
+    script(src="samples.js")
+
+  body
+
+    div.container
+
+      h1
+        a(ui-sref="home") PMKR ANGULAR COMPONENTS
+
+      nav.navbar.navbar-default
+
+        div.container-fluid
+
+          div.navbar-header
+            button.navbar-toggle(
+              type="button"
+              ng-init="navCollapsed = true"
+              ng-click="navCollapsed = !navCollapsed"
+            )
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+
+          div.collapse.navbar-collapse(collapse="navCollapsed")
+
+            ul.nav.navbar-nav
+
+              each components, componentType in data
+
+                li.dropdown
+
+                  a.dropdown-toggle
+                    | #{_(componentType).titleize()}
+                    span.caret
+
+                  ul.dropdown-menu
+
+                    each component, componentName in components
+
+                      - title = _(componentName).humanize().titleize()
+
+                      li
+                        if component.samples
+                          a(ui-sref="#{componentName}()") #{title}
+                        else
+                          a(
+                            href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/#{component.srcDir}"
+                            target="_blank"
+                          ) #{title}
+
+      div(ui-view="")

@@ -1,0 +1,16 @@
+h2 #{_(componentName).humanize().titleize()}
+
+each sample, index in component.samples
+
+  hr
+
+  section
+
+    h3 Sample: #{_(sample.name).humanize().titleize()}
+
+    section(ng-controller="pmkr.#{componentName}.#{sample.name}Controller") !{samplesCode[index].html}
+
+    tabset
+      each prop, heading in {Jade:'jade', 'HTML':'html', JavaScript:'js'}
+        tab(heading="#{heading}")
+          pre(ng-non-bindable="") #{samplesCode[index][prop]}

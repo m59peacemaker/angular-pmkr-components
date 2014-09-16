@@ -1,1 +1,103 @@
-<!DOCTYPE html><html ng-app="pmkr.componentsDemo"><head><script>window.location.hostname !== 'localhost' && document.write('<base href="/angular-pmkr-components/">');</script><script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.18/angular.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"><script src="components.js"></script><script src="index.js"></script><script src="templates.js"></script><script src="templates-jade.js"></script></head><body><div class="container"><h1>PMKR ANGULAR COMPONENTS</h1><nav class="navbar navbar-inverse"><ul class="nav navbar-nav"><li><a ui-sref="validateCustom">Validate Custom</a></li><li><a ui-sref="pristineOriginal">Pristine Original</a></li></ul></nav><div ui-view=""></div></div></body></html>
+<!DOCTYPE html>
+<html ng-app="pmkr.componentsDemo">
+
+<head>
+  <script>
+    window.location.hostname !== 'localhost' && document.write('<base href="/angular-pmkr-components/">');
+  </script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.18/angular.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+  <script src="components.js"></script>
+  <script src="index.js"></script>
+  <script src="samples.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>
+      <a ui-sref="home">PMKR ANGULAR COMPONENTS</a>
+    </h1>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div collapse="navCollapsed" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle">Directives
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a ui-sref="pristineOriginal()">Pristine Original</a>
+                </li>
+                <li>
+                  <a ui-sref="validateCustom()">Validate Custom</a>
+                </li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle">Filters
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/limitEllipsis/" target="_blank">Limit Ellipsis</a>
+                </li>
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/offset/" target="_blank">Offset</a>
+                </li>
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/partition/" target="_blank">Partition</a>
+                </li>
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/shuffle/" target="_blank">Shuffle</a>
+                </li>
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/slugify/" target="_blank">Slugify</a>
+                </li>
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/spaceSentences/" target="_blank">Space Sentences</a>
+                </li>
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/filters/stripTags/" target="_blank">Strip Tags</a>
+                </li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle">Services
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/services/debounce/" target="_blank">Debounce</a>
+                </li>
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/services/filterStabilize/" target="_blank">Filter Stabilize</a>
+                </li>
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/services/memoize/" target="_blank">Memoize</a>
+                </li>
+                <li>
+                  <a href="//github.com/m59peacemaker/angular-pmkr-components/tree/master/src/services/rethrowException/" target="_blank">Rethrow Exception</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div ui-view=""></div>
+  </div>
+</body>
+
+</html>

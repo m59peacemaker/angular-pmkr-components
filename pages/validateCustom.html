@@ -1,0 +1,115 @@
+
+<h2>Validate Custom</h2>
+<hr/>
+<section>
+  <h3>Sample: User Name Unique</h3>
+  <section ng-controller="pmkr.validateCustom.userNameUniqueController"><form name="form" class="form-group has-feedback">
+  <div ng-class="{'has-success':userNameUnique.valid, 'has-warning':userNameUnique.invalid}">
+    <label for="user_name">Username</label>
+    <input name="user_name" ng-model="user.userName" pmkr-validate-custom="urlUniqueOpts" pmkr-pristine-original="" class="form-control" />
+    <span ng-show="userNameUnique.valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+    <span ng-show="userNameUnique.invalid" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+    <i ng-show="userNameUnique.pending" class="glyphicon glyphicon-refresh fa-spin form-control-feedback"></i>
+    <p ng-show="userNameUnique.valid" class="alert alert-success">"{{userNameUnique.checkedValue}}" is availiable.</p>
+    <p ng-show="userNameUnique.invalid" class="alert alert-warning">"{{userNameUnique.checkedValue}}" is not availiable.</p>
+    <button ng-disabled="form.$invalid || form.user_name.$pristine || userNameUnique.pending" class="btn btn-default">Submit</button>
+  </div>
+</form>
+<p>Original Value: {{originalValue}}</p>
+<h3>Not Available:</h3>
+<p ng-repeat="takenUserName in takenUserNames">{{takenUserName}}</p></section>
+  <tabset>
+    <tab heading="Jade">
+      <pre ng-non-bindable="">form.form-group.has-feedback(name=&quot;form&quot;)
+
+  div(ng-class=&quot;{'has-success':userNameUnique.valid, 'has-warning':userNameUnique.invalid}&quot;)
+
+    label(for=&quot;user_name&quot;) Username
+    input.form-control(
+      name=&quot;user_name&quot;
+      ng-model=&quot;user.userName&quot;
+      pmkr-validate-custom=&quot;urlUniqueOpts&quot;
+      pmkr-pristine-original=&quot;&quot;
+    )
+
+    span.glyphicon.glyphicon-ok.form-control-feedback(ng-show=&quot;userNameUnique.valid&quot;)
+    span.glyphicon.glyphicon-warning-sign.form-control-feedback(ng-show=&quot;userNameUnique.invalid&quot;)
+    i.glyphicon.glyphicon-refresh.fa-spin.form-control-feedback(ng-show=&quot;userNameUnique.pending&quot;)
+    p.alert.alert-success(ng-show=&quot;userNameUnique.valid&quot;) &quot;{{userNameUnique.checkedValue}}&quot; is availiable.
+    p.alert.alert-warning(ng-show=&quot;userNameUnique.invalid&quot;) &quot;{{userNameUnique.checkedValue}}&quot; is not availiable.
+
+    button.btn.btn-default(ng-disabled=&quot;form.$invalid || form.user_name.$pristine || userNameUnique.pending&quot;) Submit
+
+p Original Value: {{originalValue}}
+h3 Not Available:
+p(ng-repeat=&quot;takenUserName in takenUserNames&quot;) {{takenUserName}}</pre>
+    </tab>
+    <tab heading="HTML">
+      <pre ng-non-bindable="">&lt;form name=&quot;form&quot; class=&quot;form-group has-feedback&quot;&gt;
+  &lt;div ng-class=&quot;{'has-success':userNameUnique.valid, 'has-warning':userNameUnique.invalid}&quot;&gt;
+    &lt;label for=&quot;user_name&quot;&gt;Username&lt;/label&gt;
+    &lt;input name=&quot;user_name&quot; ng-model=&quot;user.userName&quot; pmkr-validate-custom=&quot;urlUniqueOpts&quot; pmkr-pristine-original=&quot;&quot; class=&quot;form-control&quot; /&gt;
+    &lt;span ng-show=&quot;userNameUnique.valid&quot; class=&quot;glyphicon glyphicon-ok form-control-feedback&quot;&gt;&lt;/span&gt;
+    &lt;span ng-show=&quot;userNameUnique.invalid&quot; class=&quot;glyphicon glyphicon-warning-sign form-control-feedback&quot;&gt;&lt;/span&gt;
+    &lt;i ng-show=&quot;userNameUnique.pending&quot; class=&quot;glyphicon glyphicon-refresh fa-spin form-control-feedback&quot;&gt;&lt;/i&gt;
+    &lt;p ng-show=&quot;userNameUnique.valid&quot; class=&quot;alert alert-success&quot;&gt;&quot;{{userNameUnique.checkedValue}}&quot; is availiable.&lt;/p&gt;
+    &lt;p ng-show=&quot;userNameUnique.invalid&quot; class=&quot;alert alert-warning&quot;&gt;&quot;{{userNameUnique.checkedValue}}&quot; is not availiable.&lt;/p&gt;
+    &lt;button ng-disabled=&quot;form.$invalid || form.user_name.$pristine || userNameUnique.pending&quot; class=&quot;btn btn-default&quot;&gt;Submit&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/form&gt;
+&lt;p&gt;Original Value: {{originalValue}}&lt;/p&gt;
+&lt;h3&gt;Not Available:&lt;/h3&gt;
+&lt;p ng-repeat=&quot;takenUserName in takenUserNames&quot;&gt;{{takenUserName}}&lt;/p&gt;</pre>
+    </tab>
+    <tab heading="JavaScript">
+      <pre ng-non-bindable="">angular.module('&lt;%= moduleName %&gt;')
+
+.controller('&lt;%= controllerName %&gt;', function($scope, $q, $timeout) {
+
+  $scope.user = {};
+  $scope.originalValue = $scope.user.userName = 'randomGuy';
+
+  // simulate $http call
+  $scope.checkUserNameUnique = function(val) {
+    var deferred = $q.defer();
+    $timeout(function() {
+      var isAvailable = !~$scope.takenUserNames.indexOf(val);
+      deferred.resolve(isAvailable);
+    }, 250);
+    return deferred.promise;
+  };
+
+  $scope.gateUserNameUnique = function(val, $ngModel) {
+    return !val || $ngModel.$pristine;
+  };
+
+  $scope.urlUniqueOpts = {
+    name: 'unique',
+    fn: $scope.checkUserNameUnique,
+    gate: $scope.gateUserNameUnique,
+    wait: 500,
+    props: 'userNameUnique'
+  };
+
+  $scope.takenUserNames = [
+    'm59',
+    'SomeKittens',
+    'Jhawins',
+    'SterlingArcher',
+    'rlemon',
+    'Benjamin',
+    'Florian',
+    'phenom',
+    'Loktar',
+    'Zirak',
+    'TehStrike',
+    'Wes',
+    'SomeGuy'
+  ];
+
+})
+
+;</pre>
+    </tab>
+  </tabset>
+</section>

@@ -21,17 +21,22 @@ angular.module('pmkr.componentsDemo', [
     .state('home', {
       url: '/'
     })
-    
-    .state('pristineOriginal', {
-      url: '/pristine-original',
-      templateUrl: '/pages/pristineOriginal.html'
+    <%
+    for (var componentTypeName in data) {
+      var componentType = data[componentTypeName];
+      for (var componentName in componentType) {
+        var component = componentType[componentName];
+        if (component.samples) {
+    %>
+    .state('<%= componentName %>', {
+      url: '/<%= _(componentName).dasherize() %>',
+      templateUrl: '/pages/<%= componentName %>.html'
     })
-    
-    .state('validateCustom', {
-      url: '/validate-custom',
-      templateUrl: '/pages/validateCustom.html'
-    })
-    
+    <%
+        }
+      }
+    }
+    %>
     ;
 
   }
