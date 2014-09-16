@@ -30,7 +30,7 @@ angular.module('pmkr.componentsDemo', [
     %>
     .state('<%= componentName %>', {
       url: '/<%= _(componentName).dasherize() %>',
-      templateUrl: '/pages/<%= componentName %>.html'
+      templateUrl: 'pages/<%= componentName %>.html'
     })
     <%
         }

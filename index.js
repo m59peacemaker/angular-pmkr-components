@@ -24,12 +24,12 @@ angular.module('pmkr.componentsDemo', [
     
     .state('pristineOriginal', {
       url: '/pristine-original',
-      templateUrl: '/pages/pristineOriginal.html'
+      templateUrl: 'pages/pristineOriginal.html'
     })
     
     .state('validateCustom', {
       url: '/validate-custom',
-      templateUrl: '/pages/validateCustom.html'
+      templateUrl: 'pages/validateCustom.html'
     })
     
     ;
