@@ -1,0 +1,27 @@
+h2 #{_(componentName).humanize().titleize()}
+
+each sample, index in component.samples
+
+  hr
+
+  section(plnkr-demo="")
+
+    h3
+      span Sample: #{_(sample.name).humanize().titleize()}
+      button.btn.btn-default.pull-right(plnkr-demo-button="")
+        i.glyphicon.glyphicon-edit
+        span  Edit in Plunker
+
+    section(ng-controller="pmkr.#{componentName}.#{sample.name}Controller") !{samplesCode[index].html}
+
+    tabset(data-collector="")
+      each prop, heading in {Jade:'jade', 'HTML':'html', JavaScript:'js'}
+        tab(heading="#{heading}")
+          div(plnkr-demo-file="'#{sample.name}.#{prop}'")
+            pre(ng-non-bindable="") #{samplesCode[index][prop]}
+            input(
+              type="text"
+              hidden="true"
+              value="#{sample.name}.#{prop}"
+              data-collect=""
+            )

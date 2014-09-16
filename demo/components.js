@@ -9,13 +9,6 @@ angular.module('pmkr.components.directives', [
   'pmkr.validateCustom'
 ]);
 
-angular.module('pmkr.components.services', [
-  'pmkr.debounce',
-  'pmkr.memoize',
-  'pmkr.filterStabilize',
-  'pmkr.rethrowException'
-]);
-
 angular.module('pmkr.components.filters', [
   'pmkr.offset',
   'pmkr.partition',
@@ -24,6 +17,13 @@ angular.module('pmkr.components.filters', [
   'pmkr.stripTags',
   'pmkr.spaceSentences',
   'pmkr.limitEllipsis'
+]);
+
+angular.module('pmkr.components.services', [
+  'pmkr.debounce',
+  'pmkr.memoize',
+  'pmkr.filterStabilize',
+  'pmkr.rethrowException'
 ]);
 
 angular.module('pmkr.pristineOriginal', [])
@@ -254,32 +254,6 @@ angular.module('pmkr.partition', [
 
 ;
 
-angular.module('pmkr.slugify', [])
-
-.filter('pmkr.slugify', [
-  function() {
-
-    function filter(str) {
-
-      if (!str) { return str; }
-
-      var slug = str
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-      ;
-
-      return slug;
-
-    }
-
-    return filter;
-
-  }
-])
-
-;
-
 angular.module('pmkr.shuffle', [
   'pmkr.filterStabilize'
 ])
@@ -318,6 +292,32 @@ angular.module('pmkr.shuffle', [
       }
 
       return arr;
+
+    }
+
+    return filter;
+
+  }
+])
+
+;
+
+angular.module('pmkr.slugify', [])
+
+.filter('pmkr.slugify', [
+  function() {
+
+    function filter(str) {
+
+      if (!str) { return str; }
+
+      var slug = str
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^\w-]+/g, '')
+      ;
+
+      return slug;
 
     }
 

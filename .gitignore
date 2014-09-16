@@ -4,3 +4,5 @@ vendor
 temp
 tmp
 *.log
+
+demo/.git

@@ -1,6 +1,20 @@
 angular.module('pmkr.componentsDemo')
 
-.controller('ValidateCustomController', function($scope, $q, $timeout) {
+.controller('pmkr.pristineOriginal.defaultController', [
+  '$scope',
+  function($scope) {
+
+    $scope.foo = $scope.originalValue = 'Test';
+    $scope.opts = {caseSensitive:false};
+
+  }
+])
+
+;
+
+angular.module('pmkr.componentsDemo')
+
+.controller('pmkr.validateCustom.userNameUniqueController', function($scope, $q, $timeout) {
 
   $scope.user = {};
   $scope.originalValue = $scope.user.userName = 'randomGuy';
@@ -17,6 +31,14 @@ angular.module('pmkr.componentsDemo')
 
   $scope.gateUserNameUnique = function(val, $ngModel) {
     return !val || $ngModel.$pristine;
+  };
+
+  $scope.urlUniqueOpts = {
+    name: 'unique',
+    fn: $scope.checkUserNameUnique,
+    gate: $scope.gateUserNameUnique,
+    wait: 500,
+    props: 'userNameUnique'
   };
 
   $scope.takenUserNames = [

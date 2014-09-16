@@ -1,0 +1,61 @@
+
+<h2>Pristine Original</h2>
+<hr/>
+<section plnkr-demo="">
+  <h3><span>Sample: Default</span>
+    <button plnkr-demo-button="" class="btn btn-default pull-right"><i class="glyphicon glyphicon-edit"></i><span> Edit in Plunker</span></button>
+  </h3>
+  <section ng-controller="pmkr.pristineOriginal.defaultController"><p>Original Value: {{originalValue}} (not case sensitive)</p>
+<form name="form">
+  <input name="foo" ng-model="foo" pmkr-pristine-original="opts" class="form-control" />
+</form>
+<p ng-show="form.foo.$pristine" class="alert alert-success">The field is pristine.</p>
+<p ng-show="form.foo.$dirty" class="alert alert-success">The field is dirty.</p></section>
+  <tabset data-collector="">
+    <tab heading="Jade">
+      <div plnkr-demo-file="'default.jade'">
+        <pre ng-non-bindable="">p Original Value: {{originalValue}} (not case sensitive)
+
+form(name=&quot;form&quot;)
+  input.form-control(
+    name=&quot;foo&quot;
+    ng-model=&quot;foo&quot;
+    pmkr-pristine-original=&quot;opts&quot;
+  )
+
+p.alert.alert-success(ng-show=&quot;form.foo.$pristine&quot;) The field is pristine.
+p.alert.alert-success(ng-show=&quot;form.foo.$dirty&quot;) The field is dirty.</pre>
+        <input type="text" hidden="true" value="default.jade" data-collect=""/>
+      </div>
+    </tab>
+    <tab heading="HTML">
+      <div plnkr-demo-file="'default.html'">
+        <pre ng-non-bindable="">&lt;p&gt;Original Value: {{originalValue}} (not case sensitive)&lt;/p&gt;
+&lt;form name=&quot;form&quot;&gt;
+  &lt;input name=&quot;foo&quot; ng-model=&quot;foo&quot; pmkr-pristine-original=&quot;opts&quot; class=&quot;form-control&quot; /&gt;
+&lt;/form&gt;
+&lt;p ng-show=&quot;form.foo.$pristine&quot; class=&quot;alert alert-success&quot;&gt;The field is pristine.&lt;/p&gt;
+&lt;p ng-show=&quot;form.foo.$dirty&quot; class=&quot;alert alert-success&quot;&gt;The field is dirty.&lt;/p&gt;</pre>
+        <input type="text" hidden="true" value="default.html" data-collect=""/>
+      </div>
+    </tab>
+    <tab heading="JavaScript">
+      <div plnkr-demo-file="'default.js'">
+        <pre ng-non-bindable="">angular.module('&lt;%= moduleName %&gt;')
+
+.controller('&lt;%= controllerName %&gt;', [
+  '$scope',
+  function($scope) {
+
+    $scope.foo = $scope.originalValue = 'Test';
+    $scope.opts = {caseSensitive:false};
+
+  }
+])
+
+;</pre>
+        <input type="text" hidden="true" value="default.js" data-collect=""/>
+      </div>
+    </tab>
+  </tabset>
+</section>

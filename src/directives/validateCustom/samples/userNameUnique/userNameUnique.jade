@@ -1,4 +1,4 @@
-form.form-group.has-feedback(name="the_form")
+form.form-group.has-feedback(name="form")
 
   div(ng-class="{'has-success':userNameUnique.valid, 'has-warning':userNameUnique.invalid}")
 
@@ -6,7 +6,7 @@ form.form-group.has-feedback(name="the_form")
     input.form-control(
       name="user_name"
       ng-model="user.userName"
-      pmkr-validate-custom="{name:'unique', fn:checkUserNameUnique, gate:gateUserNameUnique, wait:500, props:'userNameUnique'}"
+      pmkr-validate-custom="urlUniqueOpts"
       pmkr-pristine-original=""
     )
 
@@ -16,7 +16,7 @@ form.form-group.has-feedback(name="the_form")
     p.alert.alert-success(ng-show="userNameUnique.valid") "{{userNameUnique.checkedValue}}" is availiable.
     p.alert.alert-warning(ng-show="userNameUnique.invalid") "{{userNameUnique.checkedValue}}" is not availiable.
 
-    button.btn.btn-default(ng-disabled="the_form.$invalid || the_form.user_name.$pristine || userNameUnique.pending") Submit
+    button.btn.btn-default(ng-disabled="form.$invalid || form.user_name.$pristine || userNameUnique.pending") Submit
 
 p Original Value: {{originalValue}}
 h3 Not Available:

@@ -1,6 +1,6 @@
-angular.module('pmkr.componentsDemo')
+angular.module('<%= moduleName %>')
 
-.controller('PristineOriginalController', [
+.controller('<%= controllerName %>', [
   '$scope',
   function($scope) {
 
