@@ -1,3 +1,11 @@
+/*
+pmkr.components v0.0.0
+https://github.com/m59peacemaker/angular-pmkr-components
+License: MIT
+Author: Johnny Hauser
+File created: 10.1.2014
+*/
+
 angular.module('pmkr.components', [
   'pmkr.components.filters',
   'pmkr.components.services',
@@ -485,6 +493,46 @@ angular.module('pmkr.debounce', [])
 
 ;
 
+angular.module('pmkr.memoize', [])
+
+.factory('pmkr.memoize', [
+  function() {
+
+    function service() {
+      return memoizeFactory.apply(this, arguments);
+    }
+
+    function memoizeFactory(fn) {
+
+      var cache = {};
+
+      function memoized() {
+
+        var args = [].slice.call(arguments);
+
+        var key = JSON.stringify(args);
+
+        if (cache.hasOwnProperty(key)) {
+          return cache[key];
+        }
+
+        cache[key] = fn.apply(this, arguments);
+
+        return cache[key];
+
+      }
+
+      return memoized;
+
+    }
+
+    return service;
+
+  }
+])
+
+;
+
 angular.module('pmkr.filterStabilize', [
   'pmkr.memoize'
 ])
@@ -505,47 +553,6 @@ angular.module('pmkr.filterStabilize', [
       }
 
       var memoized = memoize(filter);
-
-      return memoized;
-
-    }
-
-    return service;
-
-  }
-])
-
-;
-
-angular.module('pmkr.memoize', [])
-
-.factory('pmkr.memoize', [
-  function() {
-
-    function service() {
-      return memoizeFactory.apply(this, arguments);
-    }
-
-    function memoizeFactory(fn) {
-
-      var cache = {};
-
-      function memoized() {
-
-        var args = [].slice.call(arguments);
-
-        var key = JSON.stringify(args);
-
-        var fromCache = cache[key];
-        if (fromCache) {
-          return fromCache;
-        }
-
-        cache[key] = fn.apply(this, arguments);
-
-        return cache[key];
-
-      }
 
       return memoized;
 

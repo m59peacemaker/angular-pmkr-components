@@ -17,9 +17,8 @@ angular.module('pmkr.memoize', [])
 
         var key = JSON.stringify(args);
 
-        var fromCache = cache[key];
-        if (fromCache) {
-          return fromCache;
+        if (cache.hasOwnProperty(key)) {
+          return cache[key];
         }
 
         cache[key] = fn.apply(this, arguments);
