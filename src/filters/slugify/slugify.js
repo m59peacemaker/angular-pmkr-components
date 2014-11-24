@@ -10,16 +10,12 @@ angular.module('pmkr.slugify', [])
       var slug = str
         .toLowerCase()
         .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-      ;
+        .replace(/[^\w-]+/g, '');
 
       return slug;
-
     }
 
     return filter;
 
   }
-])
-
-;
+]);
