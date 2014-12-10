@@ -2,8 +2,8 @@ angular.module('pmkr.shuffle', [
   'pmkr.filterStabilize'
 ])
 
-.filter('pmkr.shuffle', [
-  'pmkr.filterStabilize',
+.filter('shuffle', [
+  'filterStabilize',
   function(stabilize) {
 
     var filter = stabilize(function(input) {

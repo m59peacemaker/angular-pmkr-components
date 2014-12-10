@@ -4,7 +4,7 @@ angular.module('pmkr.validateCustom', [
 
 .directive('pmkrValidateCustom', [
   '$q',
-  'pmkr.debounce',
+  'debounce',
   function($q, debounce) {
 
     var directive = {

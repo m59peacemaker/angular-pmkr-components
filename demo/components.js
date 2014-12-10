@@ -1,11 +1,3 @@
-/*
-pmkr.components v0.0.0
-https://github.com/m59peacemaker/angular-pmkr-components
-License: MIT
-Author: Johnny Hauser
-File created: 10.1.2014
-*/
-
 angular.module('pmkr.components', [
   'pmkr.components.filters',
   'pmkr.components.services',
@@ -17,6 +9,7 @@ angular.module('pmkr.components.directives', [
   'pmkr.validateCustom'
 ]);
 
+
 angular.module('pmkr.components.filters', [
   'pmkr.offset',
   'pmkr.partition',
@@ -27,12 +20,14 @@ angular.module('pmkr.components.filters', [
   'pmkr.limitEllipsis'
 ]);
 
+
 angular.module('pmkr.components.services', [
   'pmkr.debounce',
   'pmkr.memoize',
   'pmkr.filterStabilize',
   'pmkr.rethrowException'
 ]);
+
 
 angular.module('pmkr.pristineOriginal', [])
 
@@ -82,13 +77,14 @@ angular.module('pmkr.pristineOriginal', [])
 
 ;
 
+
 angular.module('pmkr.validateCustom', [
   'pmkr.debounce'
 ])
 
 .directive('pmkrValidateCustom', [
   '$q',
-  'pmkr.debounce',
+  'debounce',
   function($q, debounce) {
 
     var directive = {
@@ -172,18 +168,17 @@ angular.module('pmkr.validateCustom', [
 
 ;
 
+
 angular.module('pmkr.limitEllipsis', [
   'pmkr.stripTags',
   'pmkr.spaceSentences'
 ])
 
-.filter('pmkr.limitEllipsis', [
-  '$filter',
-  function($filter) {
-
-    var stripTags = $filter('pmkr.stripTags');
-    var spaceSentences = $filter('pmkr.spaceSentences');
-    var limitTo = $filter('limitTo');
+.filter('limitEllipsis', [
+  'limitToFilter',
+  'stripTagsFilter',
+  'spaceSentencesFilter',
+  function(limitTo, stripTags, spaceSentences) {
 
     function filter(str, limit, ellipsis) {
 
@@ -210,9 +205,10 @@ angular.module('pmkr.limitEllipsis', [
 
 ;
 
+
 angular.module('pmkr.offset', [])
 
-.filter('pmkr.offset', [
+.filter('offset', [
   function() {
 
     function filter(input, offset) {
@@ -231,12 +227,13 @@ angular.module('pmkr.offset', [])
 
 ;
 
+
 angular.module('pmkr.partition', [
   'pmkr.filterStabilize'
 ])
 
-.filter('pmkr.partition', [
-  'pmkr.filterStabilize',
+.filter('partition', [
+  'filterStabilize',
   function(stabilize) {
 
     var filter = stabilize(function(input, size) {
@@ -262,12 +259,13 @@ angular.module('pmkr.partition', [
 
 ;
 
+
 angular.module('pmkr.shuffle', [
   'pmkr.filterStabilize'
 ])
 
-.filter('pmkr.shuffle', [
-  'pmkr.filterStabilize',
+.filter('shuffle', [
+  'filterStabilize',
   function(stabilize) {
 
     var filter = stabilize(function(input) {
@@ -310,9 +308,10 @@ angular.module('pmkr.shuffle', [
 
 ;
 
+
 angular.module('pmkr.slugify', [])
 
-.filter('pmkr.slugify', [
+.filter('slugify', [
   function() {
 
     function filter(str) {
@@ -336,9 +335,10 @@ angular.module('pmkr.slugify', [])
 
 ;
 
+
 angular.module('pmkr.spaceSentences', [])
 
-.filter('pmkr.spaceSentences', [
+.filter('spaceSentences', [
   function() {
 
     function filter(str) {
@@ -358,9 +358,10 @@ angular.module('pmkr.spaceSentences', [])
 
 ;
 
+
 angular.module('pmkr.stripTags', [])
 
-.filter('pmkr.stripTags', function () {
+.filter('stripTags', function () {
 
   function filter(str, tags, disallow)  {
 
@@ -387,9 +388,10 @@ angular.module('pmkr.stripTags', [])
 
 ;
 
+
 angular.module('pmkr.debounce', [])
 
-.factory('pmkr.debounce', [
+.factory('debounce', [
   '$timeout',
   '$q',
   function($timeout, $q) {
@@ -493,9 +495,43 @@ angular.module('pmkr.debounce', [])
 
 ;
 
+
+angular.module('pmkr.filterStabilize', [
+  'pmkr.memoize'
+])
+
+.factory('filterStabilize', [
+  'memoize',
+  function(memoize) {
+
+    function service(fn) {
+
+      function filter() {
+        var args = [].slice.call(arguments);
+        // always pass a copy of the args so that the original input can't be modified
+        args = angular.copy(args);
+        // return the `fn` return value or input reference (makes `fn` return optional)
+        var filtered = fn.apply(this, args) || args[0];
+        return filtered;
+      }
+
+      var memoized = memoize(filter);
+
+      return memoized;
+
+    }
+
+    return service;
+
+  }
+])
+
+;
+
+
 angular.module('pmkr.memoize', [])
 
-.factory('pmkr.memoize', [
+.factory('memoize', [
   function() {
 
     function service() {
@@ -533,37 +569,6 @@ angular.module('pmkr.memoize', [])
 
 ;
 
-angular.module('pmkr.filterStabilize', [
-  'pmkr.memoize'
-])
-
-.factory('pmkr.filterStabilize', [
-  'pmkr.memoize',
-  function(memoize) {
-
-    function service(fn) {
-
-      function filter() {
-        var args = [].slice.call(arguments);
-        // always pass a copy of the args so that the original input can't be modified
-        args = angular.copy(args);
-        // return the `fn` return value or input reference (makes `fn` return optional)
-        var filtered = fn.apply(this, args) || args[0];
-        return filtered;
-      }
-
-      var memoized = memoize(filter);
-
-      return memoized;
-
-    }
-
-    return service;
-
-  }
-])
-
-;
 
 angular.module('pmkr.rethrowException', [])
 

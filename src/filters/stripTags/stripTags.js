@@ -1,6 +1,6 @@
 angular.module('pmkr.stripTags', [])
 
-.filter('pmkr.stripTags', function () {
+.filter('stripTags', function () {
 
   function filter(str, tags, disallow)  {
 

@@ -3,13 +3,11 @@ angular.module('pmkr.limitEllipsis', [
   'pmkr.spaceSentences'
 ])
 
-.filter('pmkr.limitEllipsis', [
-  '$filter',
-  function($filter) {
-
-    var stripTags = $filter('pmkr.stripTags');
-    var spaceSentences = $filter('pmkr.spaceSentences');
-    var limitTo = $filter('limitTo');
+.filter('limitEllipsis', [
+  'limitToFilter',
+  'stripTagsFilter',
+  'spaceSentencesFilter',
+  function(limitTo, stripTags, spaceSentences) {
 
     function filter(str, limit, ellipsis) {
 

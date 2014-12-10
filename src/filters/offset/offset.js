@@ -1,6 +1,6 @@
 angular.module('pmkr.offset', [])
 
-.filter('pmkr.offset', [
+.filter('offset', [
   function() {
 
     function filter(input, offset) {

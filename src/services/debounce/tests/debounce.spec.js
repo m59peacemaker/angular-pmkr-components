@@ -9,7 +9,7 @@ describe('debounce', function() {
     $timeout = _$timeout_;
   }));
 
-  beforeEach(inject(['pmkr.debounce', function(_debounce_) {
+  beforeEach(inject(['debounce', function(_debounce_) {
     debounce = _debounce_;
   }]));
 

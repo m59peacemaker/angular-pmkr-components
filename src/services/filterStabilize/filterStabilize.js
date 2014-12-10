@@ -2,8 +2,8 @@ angular.module('pmkr.filterStabilize', [
   'pmkr.memoize'
 ])
 
-.factory('pmkr.filterStabilize', [
-  'pmkr.memoize',
+.factory('filterStabilize', [
+  'memoize',
   function(memoize) {
 
     function service(fn) {

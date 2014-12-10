@@ -2,8 +2,8 @@ angular.module('pmkr.partition', [
   'pmkr.filterStabilize'
 ])
 
-.filter('pmkr.partition', [
-  'pmkr.filterStabilize',
+.filter('partition', [
+  'filterStabilize',
   function(stabilize) {
 
     var filter = stabilize(function(input, size) {

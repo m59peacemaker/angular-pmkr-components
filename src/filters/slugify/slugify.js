@@ -1,6 +1,6 @@
 angular.module('pmkr.slugify', [])
 
-.filter('pmkr.slugify', [
+.filter('slugify', [
   function() {
 
     function filter(str) {

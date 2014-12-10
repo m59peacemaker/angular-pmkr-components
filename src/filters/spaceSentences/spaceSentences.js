@@ -1,6 +1,6 @@
 angular.module('pmkr.spaceSentences', [])
 
-.filter('pmkr.spaceSentences', [
+.filter('spaceSentences', [
   function() {
 
     function filter(str) {

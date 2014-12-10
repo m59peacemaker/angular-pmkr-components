@@ -26,7 +26,7 @@ describe('filterStabilize', function() {
   });
 
   it('stabilizes unstable filter', function() {
-    $filterProvider.register('testFilter', ['pmkr.filterStabilize', function(stabilize) {
+    $filterProvider.register('testFilter', ['filterStabilize', function(stabilize) {
       var i = 0;
       return stabilize(function() { return ++i; });
     }]);
@@ -36,7 +36,7 @@ describe('filterStabilize', function() {
   });
 
   it('prevents filter from modifying original input reference', function() {
-    $filterProvider.register('testFilter', ['pmkr.filterStabilize', function(stabilize) {
+    $filterProvider.register('testFilter', ['filterStabilize', function(stabilize) {
       return stabilize(function(arr) {
         arr[0] = 'abc';
         return arr;
@@ -50,7 +50,7 @@ describe('filterStabilize', function() {
   });
 
   it('makes `return` of input reference optional', function() {
-    $filterProvider.register('testFilter', ['pmkr.filterStabilize', function(stabilize) {
+    $filterProvider.register('testFilter', ['filterStabilize', function(stabilize) {
       return stabilize(function(arr) { arr[0] = 'abc' });
     }]);
     $scope.foo = [1,2,3];

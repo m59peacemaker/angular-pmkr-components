@@ -4,7 +4,7 @@ describe('memoize', function() {
 
   beforeEach(module('pmkr.memoize'));
 
-  beforeEach(inject(['pmkr.memoize', function(_memoize_) {
+  beforeEach(inject(['memoize', function(_memoize_) {
     memoize = _memoize_;
   }]));
 

@@ -1,6 +1,6 @@
 angular.module('pmkr.debounce', [])
 
-.factory('pmkr.debounce', [
+.factory('debounce', [
   '$timeout',
   '$q',
   function($timeout, $q) {

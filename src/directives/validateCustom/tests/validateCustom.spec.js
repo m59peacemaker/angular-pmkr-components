@@ -12,7 +12,7 @@ describe('validateCustom', function() {
 
     $provide = _$provide_;
 
-    $provide.factory('pmkr.debounce', function($q) {
+    $provide.factory('debounce', function($q) {
       function debounce(fn) {
         return function() {
           return $q.when(fn());
@@ -85,7 +85,7 @@ describe('validateCustom', function() {
     var debounced = false;
     var debouncedLatest = false;
 
-    $provide.decorator('pmkr.debounce', function($q) {
+    $provide.decorator('debounce', function($q) {
       var debounce = function() {
         debounced = true;
       };
@@ -124,7 +124,7 @@ describe('validateCustom', function() {
 
   it('should set `props.pending` `true` while debouncing/validating', function() {
 
-    $provide.decorator('pmkr.debounce', function($q) {
+    $provide.decorator('debounce', function($q) {
       function debounce(fn) {
         return function() {
           expect($scope.fooProps.pending).toBe(true);
@@ -150,7 +150,7 @@ describe('validateCustom', function() {
 
   it('should set `props.validating` `true` while validating', function() {
 
-    $provide.decorator('pmkr.debounce', function($q) {
+    $provide.decorator('debounce', function($q) {
       function debounce(fn) {
         return function() {
           expect($scope.fooProps.validating).toBe(false);

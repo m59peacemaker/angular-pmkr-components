@@ -1,6 +1,6 @@
 angular.module('pmkr.memoize', [])
 
-.factory('pmkr.memoize', [
+.factory('memoize', [
   function() {
 
     function service() {
