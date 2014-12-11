@@ -1,6 +1,6 @@
 angular.module('pmkr.rethrowException', [])
 
-.provider('pmkr.rethrowException', [
+.provider('rethrowException', [
   '$provide',
   function($provide) {
 
